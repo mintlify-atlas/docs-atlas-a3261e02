@@ -1,0 +1,67 @@
+{
+  "projectType": "frontend",
+  "projectName": "Web Portfolio",
+  "projectDescription": "A modern React portfolio website showcasing professional experience, skills, and projects with smooth animations and responsive design.",
+  "theme": "almond",
+  "primaryColor": "#0c64c4",
+  "lightColor": "#84b4dc",
+  "darkColor": null,
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Documentation",
+        "groups": [
+          {
+            "group": "Get Started",
+            "pages": ["introduction", "quickstart", "installation"]
+          },
+          {
+            "group": "Development",
+            "pages": ["development/local-setup", "development/project-structure", "development/building-deploying"]
+          },
+          {
+            "group": "Components",
+            "pages": ["components/overview", "components/hero-section", "components/about-section", "components/skills-section", "components/experience-section", "components/contact-section", "components/navbar"]
+          },
+          {
+            "group": "UI Components",
+            "pages": ["ui-components/overview", "ui-components/buttons", "ui-components/cards", "ui-components/forms", "ui-components/animations"]
+          },
+          {
+            "group": "Styling",
+            "pages": ["styling/tailwind", "styling/theming", "styling/responsive-design"]
+          }
+        ]
+      },
+      {
+        "tab": "Customization",
+        "groups": [
+          {
+            "group": "Personalization",
+            "pages": ["customization/content", "customization/styling", "customization/adding-sections"]
+          }
+        ]
+      }
+    ]
+  },
+  "keyFeatures": [
+    "Responsive design optimized for desktop and mobile",
+    "Smooth animations with Framer Motion",
+    "49 reusable shadcn/ui components",
+    "TypeScript for type safety",
+    "Modern React architecture with React Router",
+    "Tailwind CSS for styling",
+    "Fast development with Vite HMR",
+    "Testing with Vitest"
+  ],
+  "publicApiSurface": [
+    "HeroSection component",
+    "AboutSection component",
+    "SkillsSection component",
+    "ExperienceSection component",
+    "ContactSection component",
+    "Navbar component",
+    "NavLink component",
+    "UI components (Button, Card, Dialog, etc.)"
+  ]
+}
