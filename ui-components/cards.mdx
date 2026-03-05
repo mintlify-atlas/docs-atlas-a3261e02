@@ -1,0 +1,464 @@
+---
+title: Card Component
+description: Versatile container component for grouping related content with header, body, and footer sections
+---
+
+## Overview
+
+The Card component provides a flexible container for content with built-in support for headers, titles, descriptions, content areas, and footers. It's one of the most commonly used layout components.
+
+<Note>
+  Location: `src/components/ui/card.tsx`
+</Note>
+
+## Component Structure
+
+The card is composed of five sub-components:
+
+```tsx
+import * as React from "react"
+import { cn } from "@/lib/utils"
+
+const Card = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
+  ({ className, ...props }, ref) => (
+    <div
+      ref={ref}
+      className={cn(
+        "rounded-lg border bg-card text-card-foreground shadow-sm",
+        className
+      )}
+      {...props}
+    />
+  )
+)
+
+const CardHeader = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
+  ({ className, ...props }, ref) => (
+    <div
+      ref={ref}
+      className={cn("flex flex-col space-y-1.5 p-6", className)}
+      {...props}
+    />
+  )
+)
+
+const CardTitle = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HTMLHeadingElement>>(
+  ({ className, ...props }, ref) => (
+    <h3
+      ref={ref}
+      className={cn("text-2xl font-semibold leading-none tracking-tight", className)}
+      {...props}
+    />
+  )
+)
+
+const CardDescription = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HTMLParagraphElement>>(
+  ({ className, ...props }, ref) => (
+    <p
+      ref={ref}
+      className={cn("text-sm text-muted-foreground", className)}
+      {...props}
+    />
+  )
+)
+
+const CardContent = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
+  ({ className, ...props }, ref) => (
+    <div ref={ref} className={cn("p-6 pt-0", className)} {...props} />
+  )
+)
+
+const CardFooter = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
+  ({ className, ...props }, ref) => (
+    <div
+      ref={ref}
+      className={cn("flex items-center p-6 pt-0", className)}
+      {...props}
+    />
+  )
+)
+```
+
+## Basic Usage
+
+```tsx
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+
+export function BasicCard() {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Project Overview</CardTitle>
+        <CardDescription>A comprehensive project management dashboard</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <p>Track tasks, manage resources, and collaborate with your team.</p>
+      </CardContent>
+      <CardFooter>
+        <Button>Get Started</Button>
+      </CardFooter>
+    </Card>
+  )
+}
+```
+
+## Component Breakdown
+
+<Tabs>
+  <Tab title="Card">
+    The root container with border, background, and shadow.
+
+    **Default Styles:**
+    - Rounded corners (`rounded-lg`)
+    - Border with theme color
+    - Card background color
+    - Subtle shadow (`shadow-sm`)
+
+    ```tsx
+    <Card className="w-[350px]">
+      {/* Card content */}
+    </Card>
+    ```
+  </Tab>
+
+  <Tab title="CardHeader">
+    Container for title and description with consistent spacing.
+
+    **Default Styles:**
+    - Flexbox column layout
+    - Vertical spacing between children
+    - 24px padding (p-6)
+
+    ```tsx
+    <CardHeader>
+      <CardTitle>Title Here</CardTitle>
+      <CardDescription>Description here</CardDescription>
+    </CardHeader>
+    ```
+  </Tab>
+
+  <Tab title="CardTitle">
+    Semantic heading (h3) for the card title.
+
+    **Default Styles:**
+    - Large text (text-2xl)
+    - Semibold weight
+    - Tight line height
+    - Tighter letter spacing
+
+    ```tsx
+    <CardTitle>My Card Title</CardTitle>
+    ```
+  </Tab>
+
+  <Tab title="CardDescription">
+    Muted text for additional context.
+
+    **Default Styles:**
+    - Small text (text-sm)
+    - Muted foreground color
+
+    ```tsx
+    <CardDescription>
+      Supporting text that provides context
+    </CardDescription>
+    ```
+  </Tab>
+
+  <Tab title="CardContent">
+    Main content area with padding.
+
+    **Default Styles:**
+    - 24px horizontal and bottom padding
+    - No top padding (pt-0) to connect with header
+
+    ```tsx
+    <CardContent>
+      {/* Your main content */}
+    </CardContent>
+    ```
+  </Tab>
+
+  <Tab title="CardFooter">
+    Footer area for actions, typically with buttons.
+
+    **Default Styles:**
+    - Flexbox layout (horizontal by default)
+    - Items centered vertically
+    - 24px horizontal and bottom padding
+
+    ```tsx
+    <CardFooter className="gap-2">
+      <Button variant="outline">Cancel</Button>
+      <Button>Confirm</Button>
+    </CardFooter>
+    ```
+  </Tab>
+</Tabs>
+
+## Real Usage Examples
+
+### Stats Card (from AboutSection)
+
+This example from `src/components/AboutSection.tsx` shows cards used for statistics:
+
+```tsx
+import { motion } from "framer-motion"
+import { Briefcase, Users, Lightbulb } from "lucide-react"
+
+const stats = [
+  { icon: Briefcase, value: "+20", label: "Años de experiencia" },
+  { icon: Users, value: "+70", label: "Clientes atendidos" },
+  { icon: Lightbulb, value: "+200", label: "Proyectos exitosos" },
+]
+
+// Using custom card styling without shadcn Card component
+{stats.map((stat, i) => (
+  <motion.div
+    key={stat.label}
+    initial={{ opacity: 0, x: 20 }}
+    whileInView={{ opacity: 1, x: 0 }}
+    viewport={{ once: true }}
+    transition={{ delay: 0.3 + i * 0.1, duration: 0.5 }}
+    className="bg-card border border-border rounded-lg p-5 flex items-center gap-4 border-glow"
+  >
+    <div className="w-10 h-10 rounded-md bg-primary/10 flex items-center justify-center flex-shrink-0">
+      <stat.icon className="w-5 h-5 text-primary" />
+    </div>
+    <div>
+      <p className="font-heading text-2xl font-bold">{stat.value}</p>
+      <p className="text-muted-foreground text-sm">{stat.label}</p>
+    </div>
+  </motion.div>
+))}
+```
+
+### Skills Card (from SkillsSection)
+
+From `src/components/SkillsSection.tsx`:
+
+```tsx
+import { Brain, Code, Shield } from "lucide-react"
+
+const skills = [
+  {
+    icon: Brain,
+    title: "IA Generativa",
+    description: "Implementación de soluciones de IA Generativa privada para empresas",
+  },
+  // ... more skills
+]
+
+<div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+  {skills.map((skill, i) => (
+    <motion.div
+      key={skill.title}
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ delay: i * 0.1, duration: 0.5 }}
+      className="bg-background border border-border rounded-lg p-6 hover:border-primary/30 transition-all group"
+    >
+      <div className="w-11 h-11 rounded-lg bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-colors">
+        <skill.icon className="w-5 h-5 text-primary" />
+      </div>
+      <h3 className="font-heading text-lg font-semibold mb-2">{skill.title}</h3>
+      <p className="text-muted-foreground text-sm leading-relaxed">{skill.description}</p>
+    </motion.div>
+  ))}
+</div>
+```
+
+## Card Patterns
+
+### Interactive Card
+
+Add hover effects and click handlers:
+
+```tsx
+<Card className="cursor-pointer transition-all hover:shadow-lg hover:border-primary/50">
+  <CardHeader>
+    <CardTitle>Interactive Card</CardTitle>
+    <CardDescription>Click to learn more</CardDescription>
+  </CardHeader>
+</Card>
+```
+
+### Card with Image
+
+```tsx
+<Card className="overflow-hidden">
+  <img
+    src="/placeholder.svg"
+    alt="Card image"
+    className="w-full h-48 object-cover"
+  />
+  <CardHeader>
+    <CardTitle>Image Card</CardTitle>
+    <CardDescription>Card with header image</CardDescription>
+  </CardHeader>
+  <CardContent>
+    <p>Main content goes here.</p>
+  </CardContent>
+</Card>
+```
+
+### Card Grid Layout
+
+```tsx
+<div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+  <Card>
+    <CardHeader>
+      <CardTitle>Card 1</CardTitle>
+    </CardHeader>
+    <CardContent>
+      <p>Content for card 1</p>
+    </CardContent>
+  </Card>
+  
+  <Card>
+    <CardHeader>
+      <CardTitle>Card 2</CardTitle>
+    </CardHeader>
+    <CardContent>
+      <p>Content for card 2</p>
+    </CardContent>
+  </Card>
+  
+  <Card>
+    <CardHeader>
+      <CardTitle>Card 3</CardTitle>
+    </CardHeader>
+    <CardContent>
+      <p>Content for card 3</p>
+    </CardContent>
+  </Card>
+</div>
+```
+
+### Card with Icon Header
+
+```tsx
+import { Zap } from "lucide-react"
+
+<Card>
+  <CardHeader>
+    <div className="flex items-center gap-4">
+      <div className="p-2 bg-primary/10 rounded-lg">
+        <Zap className="h-6 w-6 text-primary" />
+      </div>
+      <div>
+        <CardTitle>Performance</CardTitle>
+        <CardDescription>Lightning fast</CardDescription>
+      </div>
+    </div>
+  </CardHeader>
+  <CardContent>
+    <p>Optimized for speed and efficiency.</p>
+  </CardContent>
+</Card>
+```
+
+## Custom Variants
+
+### Highlighted Card
+
+```tsx
+<Card className="border-primary/50 shadow-lg shadow-primary/20">
+  <CardHeader>
+    <CardTitle>Featured</CardTitle>
+    <CardDescription>This card stands out</CardDescription>
+  </CardHeader>
+</Card>
+```
+
+### Compact Card
+
+```tsx
+<Card>
+  <CardHeader className="p-4">
+    <CardTitle className="text-lg">Compact</CardTitle>
+  </CardHeader>
+  <CardContent className="p-4 pt-0">
+    <p className="text-sm">Less padding for compact layouts</p>
+  </CardContent>
+</Card>
+```
+
+### Card with Badge
+
+```tsx
+import { Badge } from "@/components/ui/badge"
+
+<Card>
+  <CardHeader>
+    <div className="flex items-start justify-between">
+      <div>
+        <CardTitle>Premium Feature</CardTitle>
+        <CardDescription>Available on Pro plan</CardDescription>
+      </div>
+      <Badge>New</Badge>
+    </div>
+  </CardHeader>
+  <CardContent>
+    <p>Unlock advanced capabilities.</p>
+  </CardContent>
+</Card>
+```
+
+## Accessibility
+
+Cards are semantic and accessible by default:
+
+- Use proper heading hierarchy with CardTitle (h3)
+- Include descriptive CardDescription for context
+- Add ARIA labels when cards are interactive
+
+```tsx
+<Card
+  role="article"
+  aria-labelledby="card-title"
+  className="cursor-pointer"
+  onClick={handleClick}
+>
+  <CardHeader>
+    <CardTitle id="card-title">Accessible Card</CardTitle>
+    <CardDescription>Properly labeled interactive card</CardDescription>
+  </CardHeader>
+</Card>
+```
+
+## Best Practices
+
+<CardGroup cols={2}>
+  <Card title="Do" icon="check">
+    - Use consistent spacing patterns
+    - Include descriptive titles
+    - Group related content
+    - Maintain visual hierarchy
+  </Card>
+  <Card title="Don't" icon="x">
+    - Don't overcrowd with content
+    - Avoid too many nested cards
+    - Don't use inconsistent padding
+    - Don't skip accessibility
+  </Card>
+</CardGroup>
+
+<Tip>
+  Cards work great with Framer Motion for entrance animations. See the [Animations](/ui-components/animations) page for examples.
+</Tip>
+
+## Related Components
+
+- [Buttons](/ui-components/buttons) - Button components for card actions
+- [Forms](/ui-components/forms) - Form components for interactive cards
+- [Animations](/ui-components/animations) - Animation patterns for cards

@@ -1,0 +1,579 @@
+---
+title: Installation
+description: Detailed installation guide with prerequisites, setup steps, and troubleshooting
+---
+
+# Installation
+
+This guide provides comprehensive instructions for installing and setting up David Carrascosa's portfolio on your local development environment.
+
+## Prerequisites
+
+Before installing the portfolio, ensure your system meets these requirements:
+
+### Required Software
+
+<Steps>
+  <Step title="Node.js 18 or Higher">
+    The portfolio requires Node.js 18+ for modern JavaScript features and optimal performance.
+    
+    **Check your Node.js version:**
+    ```bash
+    node --version
+    # Should output v18.0.0 or higher
+    ```
+    
+    **Install Node.js:**
+    - Download from [nodejs.org](https://nodejs.org/)
+    - Or use a version manager like [nvm](https://github.com/nvm-sh/nvm):
+    
+    ```bash
+    # Using nvm (recommended)
+    nvm install 20
+    nvm use 20
+    ```
+    
+    <Warning>
+      Node.js versions below 18 are not supported and may cause compatibility issues.
+    </Warning>
+  </Step>
+  
+  <Step title="Package Manager">
+    Choose one of the following package managers:
+    
+    <Tabs>
+      <Tab title="Bun (Recommended)">
+        **Bun** is a fast JavaScript runtime and package manager. This project was built with Bun.
+        
+        ```bash
+        # Install Bun (macOS/Linux)
+        curl -fsSL https://bun.sh/install | bash
+        
+        # Verify installation
+        bun --version
+        ```
+        
+        [Bun documentation](https://bun.sh/docs)
+      </Tab>
+      
+      <Tab title="npm">
+        **npm** comes pre-installed with Node.js.
+        
+        ```bash
+        # Verify npm installation
+        npm --version
+        
+        # Update to latest version (optional)
+        npm install -g npm@latest
+        ```
+      </Tab>
+      
+      <Tab title="yarn">
+        **Yarn** is a popular alternative to npm.
+        
+        ```bash
+        # Install Yarn globally
+        npm install -g yarn
+        
+        # Verify installation
+        yarn --version
+        ```
+      </Tab>
+      
+      <Tab title="pnpm">
+        **pnpm** is a fast, disk-efficient package manager.
+        
+        ```bash
+        # Install pnpm
+        npm install -g pnpm
+        
+        # Verify installation
+        pnpm --version
+        ```
+      </Tab>
+    </Tabs>
+  </Step>
+  
+  <Step title="Git">
+    Git is required to clone the repository.
+    
+    ```bash
+    # Check Git installation
+    git --version
+    ```
+    
+    **Install Git:**
+    - macOS: `brew install git` or download from [git-scm.com](https://git-scm.com/)
+    - Linux: `sudo apt install git` (Ubuntu/Debian) or `sudo yum install git` (CentOS/RHEL)
+    - Windows: Download from [git-scm.com](https://git-scm.com/)
+  </Step>
+</Steps>
+
+### System Requirements
+
+| Component | Minimum | Recommended |
+|-----------|---------|-------------|
+| **Node.js** | 18.0.0 | 20.0.0+ |
+| **RAM** | 4 GB | 8 GB+ |
+| **Disk Space** | 500 MB | 1 GB |
+| **OS** | macOS 10.15+, Ubuntu 20.04+, Windows 10+ | Latest stable |
+
+## Installation Steps
+
+<Steps>
+  <Step title="Clone the Repository">
+    Clone the portfolio repository from GitHub:
+    
+    ```bash
+    git clone https://github.com/tu-usuario/web-portfolio.git
+    ```
+    
+    <Note>
+      Replace `tu-usuario` with the actual GitHub username or organization.
+    </Note>
+    
+    Navigate to the project directory:
+    
+    ```bash
+    cd web-portfolio
+    ```
+  </Step>
+  
+  <Step title="Install Dependencies">
+    Install all required packages listed in `package.json`:
+    
+    <CodeGroup>
+      ```bash bun
+      bun install
+      ```
+      
+      ```bash npm
+      npm install
+      ```
+      
+      ```bash yarn
+      yarn install
+      ```
+      
+      ```bash pnpm
+      pnpm install
+      ```
+    </CodeGroup>
+    
+    This will install:
+    - **Core dependencies**: React, React DOM, React Router
+    - **Build tools**: Vite, TypeScript, SWC
+    - **UI framework**: Tailwind CSS, shadcn/ui, Radix UI
+    - **Animation**: Framer Motion
+    - **Dev dependencies**: ESLint, Vitest, Testing Library
+    
+    **Installation time:** ~30-60 seconds (varies by internet speed)
+    
+    <Tip>
+      The project includes a `bun.lockb` file for Bun users. If using npm, yarn, or pnpm, a new lockfile will be generated.
+    </Tip>
+  </Step>
+  
+  <Step title="Verify Installation">
+    Verify that all dependencies were installed correctly:
+    
+    ```bash
+    # Check that node_modules exists
+    ls node_modules
+    
+    # Verify React is installed
+    ls node_modules/react
+    ```
+    
+    You should see a `node_modules` directory with all installed packages.
+  </Step>
+  
+  <Step title="Start Development Server">
+    Launch the Vite development server:
+    
+    <CodeGroup>
+      ```bash bun
+      bun run dev
+      ```
+      
+      ```bash npm
+      npm run dev
+      ```
+      
+      ```bash yarn
+      yarn dev
+      ```
+      
+      ```bash pnpm
+      pnpm dev
+      ```
+    </CodeGroup>
+    
+    **Expected output:**
+    ```bash
+    VITE v5.4.19  ready in 324 ms
+    
+    ➜  Local:   http://localhost:5173/
+    ➜  Network: http://192.168.1.100:5173/
+    ➜  press h + enter to show help
+    ```
+    
+    <Note>
+      The server listens on all network interfaces (`::`) by default, configured in `vite.config.ts:8`.
+    </Note>
+  </Step>
+  
+  <Step title="Access the Application">
+    Open your browser and navigate to:
+    
+    ```
+    http://localhost:5173
+    ```
+    
+    You should see the portfolio homepage with:
+    - Navigation bar
+    - Hero section
+    - About section
+    - Experience timeline
+    - Skills showcase
+    - Contact form
+    
+    <Tip>
+      Try resizing your browser window to see the responsive design in action.
+    </Tip>
+  </Step>
+</Steps>
+
+## Environment Configuration
+
+This portfolio does not require environment variables for basic operation. However, if you plan to add features like:
+
+- Contact form email delivery
+- Analytics integration
+- CMS integration
+
+You may need to create a `.env` file:
+
+```bash .env
+# Example environment variables (not required for basic setup)
+VITE_API_URL=https://api.example.com
+VITE_CONTACT_EMAIL=contact@example.com
+```
+
+<Warning>
+  Never commit `.env` files to version control. The `.gitignore` file already excludes them.
+</Warning>
+
+## Project Structure
+
+After installation, your project directory should look like:
+
+```
+web-portfolio/
+├── node_modules/          # Installed dependencies (ignored by git)
+├── public/                # Static assets
+├── src/
+│   ├── components/
+│   │   ├── ui/           # shadcn/ui components (40+ files)
+│   │   ├── AboutSection.tsx
+│   │   ├── ContactSection.tsx
+│   │   ├── ExperienceSection.tsx
+│   │   ├── HeroSection.tsx
+│   │   ├── Navbar.tsx
+│   │   ├── NavLink.tsx
+│   │   └── SkillsSection.tsx
+│   ├── hooks/
+│   │   └── use-mobile.tsx
+│   ├── lib/
+│   │   └── utils.ts
+│   ├── pages/
+│   │   ├── Index.tsx
+│   │   └── NotFound.tsx
+│   ├── App.tsx
+│   ├── main.tsx
+│   └── index.css
+├── .gitignore
+├── bun.lockb              # Bun lockfile
+├── components.json        # shadcn/ui config
+├── eslint.config.js
+├── index.html
+├── package.json
+├── postcss.config.js
+├── README.md
+├── tailwind.config.ts
+├── tsconfig.json
+├── tsconfig.app.json
+├── tsconfig.node.json
+├── vite.config.ts         # Vite configuration
+└── vitest.config.ts       # Test configuration
+```
+
+## Verification Steps
+
+Confirm your installation is working correctly:
+
+<Steps>
+  <Step title="Run Type Checking">
+    Verify TypeScript compilation:
+    
+    ```bash
+    npx tsc --noEmit
+    ```
+    
+    No output means success. Errors indicate type issues.
+  </Step>
+  
+  <Step title="Run Linter">
+    Check code quality:
+    
+    <CodeGroup>
+      ```bash bun
+      bun run lint
+      ```
+      
+      ```bash npm
+      npm run lint
+      ```
+    </CodeGroup>
+    
+    This runs ESLint against the codebase.
+  </Step>
+  
+  <Step title="Run Tests">
+    Execute the test suite:
+    
+    <CodeGroup>
+      ```bash bun
+      bun run test
+      ```
+      
+      ```bash npm
+      npm run test
+      ```
+    </CodeGroup>
+    
+    All tests should pass.
+  </Step>
+  
+  <Step title="Build for Production">
+    Create an optimized production build:
+    
+    <CodeGroup>
+      ```bash bun
+      bun run build
+      ```
+      
+      ```bash npm
+      npm run build
+      ```
+    </CodeGroup>
+    
+    **Expected output:**
+    ```bash
+    vite v5.4.19 building for production...
+    ✓ 1234 modules transformed.
+    dist/index.html                  0.45 kB │ gzip:  0.30 kB
+    dist/assets/index-abc123.css    12.34 kB │ gzip:  3.45 kB
+    dist/assets/index-def456.js    123.45 kB │ gzip: 45.67 kB
+    ✓ built in 2.34s
+    ```
+    
+    The `dist/` directory contains production-ready files.
+  </Step>
+  
+  <Step title="Preview Production Build">
+    Test the production build locally:
+    
+    <CodeGroup>
+      ```bash bun
+      bun run preview
+      ```
+      
+      ```bash npm
+      npm run preview
+      ```
+    </CodeGroup>
+    
+    Open the provided URL (usually http://localhost:4173) to preview.
+  </Step>
+</Steps>
+
+## Troubleshooting
+
+### Common Issues
+
+<Accordion>
+  <AccordionItem title="Port 5173 Already in Use">
+    **Error:** `Error: listen EADDRINUSE: address already in use :::5173`
+    
+    **Solution:** Use a different port:
+    
+    ```bash
+    bun run dev --port 3000
+    ```
+    
+    Or kill the process using port 5173:
+    
+    ```bash
+    # macOS/Linux
+    lsof -ti:5173 | xargs kill -9
+    
+    # Windows
+    netstat -ano | findstr :5173
+    taskkill /PID <PID> /F
+    ```
+  </AccordionItem>
+  
+  <AccordionItem title="Module Not Found Errors">
+    **Error:** `Cannot find module '@/components/...'`
+    
+    **Solution:** Path aliases are configured in `vite.config.ts:16-18`. Ensure dependencies are installed:
+    
+    ```bash
+    rm -rf node_modules
+    bun install
+    ```
+    
+    If using VS Code, reload the window: `Cmd+Shift+P` → "Reload Window"
+  </AccordionItem>
+  
+  <AccordionItem title="TypeScript Errors">
+    **Error:** Type errors in `.tsx` files
+    
+    **Solution:** Ensure TypeScript is installed:
+    
+    ```bash
+    bun add -D typescript
+    ```
+    
+    Restart your IDE's TypeScript server:
+    - VS Code: `Cmd+Shift+P` → "TypeScript: Restart TS Server"
+  </AccordionItem>
+  
+  <AccordionItem title="Tailwind CSS Not Working">
+    **Error:** Styles not applying
+    
+    **Solution:** Verify Tailwind is configured:
+    
+    1. Check `tailwind.config.ts` exists
+    2. Ensure `src/index.css` imports Tailwind directives:
+    
+    ```css
+    @tailwind base;
+    @tailwind components;
+    @tailwind utilities;
+    ```
+    
+    3. Restart the dev server
+  </AccordionItem>
+  
+  <AccordionItem title="Slow Build Performance">
+    **Issue:** Vite is slow or unresponsive
+    
+    **Solutions:**
+    
+    1. **Clear Vite cache:**
+    ```bash
+    rm -rf node_modules/.vite
+    ```
+    
+    2. **Exclude node_modules from IDE indexing** (VS Code settings):
+    ```json
+    "files.watcherExclude": {
+      "**/node_modules/**": true
+    }
+    ```
+    
+    3. **Use SWC instead of Babel** (already configured in `vite.config.ts:14`)
+  </AccordionItem>
+  
+  <AccordionItem title="Dependency Installation Fails">
+    **Error:** Installation errors or network issues
+    
+    **Solutions:**
+    
+    1. **Clear package manager cache:**
+    
+    <CodeGroup>
+      ```bash bun
+      bun pm cache rm
+      ```
+      
+      ```bash npm
+      npm cache clean --force
+      ```
+      
+      ```bash yarn
+      yarn cache clean
+      ```
+    </CodeGroup>
+    
+    2. **Delete lockfile and reinstall:**
+    ```bash
+    rm bun.lockb  # or package-lock.json, yarn.lock
+    rm -rf node_modules
+    bun install
+    ```
+    
+    3. **Use a different package manager** if one consistently fails
+  </AccordionItem>
+</Accordion>
+
+### Getting Additional Help
+
+If you're still experiencing issues:
+
+1. **Check the console** for error messages
+2. **Review Vite logs** in the terminal
+3. **Search existing issues** on GitHub
+4. **Open a new issue** with:
+   - Node.js version (`node --version`)
+   - Package manager and version
+   - Error messages and stack traces
+   - Steps to reproduce
+
+<CardGroup cols={2}>
+  <Card title="Vite Documentation" icon="book" href="https://vitejs.dev/guide/troubleshooting.html">
+    Official Vite troubleshooting guide
+  </Card>
+  
+  <Card title="React Documentation" icon="react" href="https://react.dev/">
+    React documentation and guides
+  </Card>
+  
+  <Card title="Tailwind CSS Docs" icon="palette" href="https://tailwindcss.com/docs">
+    Tailwind CSS documentation
+  </Card>
+  
+  <Card title="shadcn/ui Docs" icon="component" href="https://ui.shadcn.com/">
+    shadcn/ui component library
+  </Card>
+</CardGroup>
+
+## Next Steps
+
+Now that you have the portfolio installed:
+
+<Steps>
+  <Step title="Explore the Codebase">
+    - Start with `src/App.tsx` to understand the routing structure
+    - Review `src/pages/Index.tsx` to see how sections are composed
+    - Browse `src/components/` to explore individual components
+  </Step>
+  
+  <Step title="Customize the Portfolio">
+    - Edit content in section components (`HeroSection.tsx`, etc.)
+    - Modify styles in `tailwind.config.ts`
+    - Customize shadcn/ui components in `src/components/ui/`
+  </Step>
+  
+  <Step title="Build and Deploy">
+    - Run `bun run build` to create a production build
+    - Deploy to Vercel, Netlify, or GitHub Pages
+    - See the [Building & Deploying guide](/development/building-deploying) for deployment instructions
+  </Step>
+</Steps>
+
+---
+
+You're all set! The portfolio is installed and ready for development.

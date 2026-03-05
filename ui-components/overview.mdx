@@ -1,0 +1,234 @@
+---
+title: UI Components Overview
+description: Comprehensive guide to the shadcn/ui component library used in this React portfolio
+---
+
+## Introduction
+
+This portfolio is built with [shadcn/ui](https://ui.shadcn.com), a collection of re-usable components built using **Radix UI primitives** and **Tailwind CSS**. The library provides 49 production-ready components that can be customized to match your design system.
+
+<Note>
+  shadcn/ui is not a traditional component library. Components are copied directly into your project, giving you full control over the code.
+</Note>
+
+## Component Architecture
+
+### Built on Radix UI Primitives
+
+All interactive components leverage [Radix UI](https://www.radix-ui.com/) primitives, which provide:
+
+- **Accessibility**: WAI-ARIA compliant components out of the box
+- **Unstyled**: Complete control over styling with Tailwind CSS
+- **Composable**: Flexible APIs that work together seamlessly
+- **Type-safe**: Full TypeScript support
+
+### Styling with CVA
+
+Components use [class-variance-authority (CVA)](https://cva.style/) for managing variants and styling:
+
+```tsx
+const buttonVariants = cva(
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium",
+  {
+    variants: {
+      variant: {
+        default: "bg-primary text-primary-foreground hover:bg-primary/90",
+        destructive: "bg-destructive text-destructive-foreground",
+        outline: "border border-input bg-background hover:bg-accent",
+      },
+      size: {
+        default: "h-10 px-4 py-2",
+        sm: "h-9 rounded-md px-3",
+        lg: "h-11 rounded-md px-8",
+      },
+    },
+  }
+)
+```
+
+## Component Organization
+
+All UI components are located in `src/components/ui/` and organized by functionality:
+
+### Layout & Structure
+- **Card** - Containers for content with header, body, and footer
+- **Separator** - Visual dividers between content sections
+- **Aspect Ratio** - Maintain consistent aspect ratios
+- **Resizable** - Adjustable panel layouts
+- **Sidebar** - Application navigation sidebars
+
+### Navigation
+- **Navigation Menu** - Accessible navigation with dropdowns
+- **Menubar** - Application menu bars
+- **Breadcrumb** - Hierarchical navigation trail
+- **Tabs** - Organize content into switchable views
+- **Pagination** - Navigate through pages of content
+
+### Form Components
+- **Form** - Form context and validation with react-hook-form
+- **Input** - Text input fields
+- **Textarea** - Multi-line text input
+- **Label** - Accessible form labels
+- **Select** - Dropdown selection menus
+- **Checkbox** - Boolean input controls
+- **Radio Group** - Single selection from multiple options
+- **Switch** - Toggle controls
+- **Slider** - Range input controls
+- **Input OTP** - One-time password input
+
+### Buttons & Actions
+- **Button** - Primary action triggers
+- **Toggle** - On/off state buttons
+- **Toggle Group** - Multiple choice toggles
+
+### Overlays & Dialogs
+- **Dialog** - Modal dialogs
+- **Alert Dialog** - Confirmation dialogs
+- **Sheet** - Sliding panels from screen edges
+- **Drawer** - Mobile-friendly bottom sheets
+- **Popover** - Floating content containers
+- **Tooltip** - Contextual information on hover
+- **Hover Card** - Rich hover tooltips
+- **Dropdown Menu** - Contextual action menus
+- **Context Menu** - Right-click menus
+
+### Feedback & Status
+- **Alert** - Important messages and notifications
+- **Toast** - Temporary notification messages
+- **Sonner** - Advanced toast notifications
+- **Badge** - Status indicators and labels
+- **Progress** - Progress indicators
+- **Skeleton** - Loading placeholders
+
+### Data Display
+- **Table** - Tabular data display
+- **Avatar** - User profile images
+- **Calendar** - Date selection
+- **Chart** - Data visualization with Recharts
+- **Scroll Area** - Custom scrollable containers
+
+### Interactive
+- **Accordion** - Collapsible content sections
+- **Collapsible** - Show/hide content
+- **Command** - Command palette (⌘K)
+- **Carousel** - Image and content carousels
+
+## Customization Approach
+
+### CSS Variables
+
+The design system uses CSS variables for theming, defined in `src/index.css`:
+
+```css
+:root {
+  --background: 220 20% 7%;
+  --foreground: 210 20% 92%;
+  --primary: 207 90% 54%;
+  --card: 220 18% 10%;
+  --border: 220 15% 18%;
+  /* ... more variables */
+}
+```
+
+### Utility Function
+
+All components use the `cn()` utility for merging class names:
+
+```tsx
+import { cn } from "@/lib/utils"
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs))
+}
+```
+
+This combines `clsx` for conditional classes and `tailwind-merge` to prevent conflicts.
+
+## Configuration
+
+The project configuration is stored in `components.json`:
+
+```json
+{
+  "style": "default",
+  "rsc": false,
+  "tsx": true,
+  "tailwind": {
+    "config": "tailwind.config.ts",
+    "css": "src/index.css",
+    "baseColor": "slate",
+    "cssVariables": true
+  },
+  "aliases": {
+    "components": "@/components",
+    "utils": "@/lib/utils",
+    "ui": "@/components/ui"
+  }
+}
+```
+
+## Key Dependencies
+
+<CardGroup cols={2}>
+  <Card title="Radix UI" icon="box">
+    Accessible component primitives
+  </Card>
+  <Card title="Tailwind CSS" icon="palette">
+    Utility-first CSS framework
+  </Card>
+  <Card title="CVA" icon="sliders">
+    Class variance authority for variants
+  </Card>
+  <Card title="Lucide React" icon="icons">
+    Beautiful icon library
+  </Card>
+</CardGroup>
+
+## Best Practices
+
+<Tip>
+  Always extend components rather than modifying the source files. This makes updates easier and keeps your customizations separate.
+</Tip>
+
+### Component Extension Example
+
+```tsx
+import { Button } from "@/components/ui/button"
+
+export function CustomButton({ children, ...props }) {
+  return (
+    <Button
+      className="custom-animation-class"
+      {...props}
+    >
+      {children}
+    </Button>
+  )
+}
+```
+
+### Variant Usage
+
+```tsx
+import { Button } from "@/components/ui/button"
+
+export function ButtonDemo() {
+  return (
+    <div className="flex gap-4">
+      <Button variant="default">Default</Button>
+      <Button variant="destructive">Destructive</Button>
+      <Button variant="outline">Outline</Button>
+      <Button variant="ghost">Ghost</Button>
+    </div>
+  )
+}
+```
+
+## Next Steps
+
+Explore the individual component pages to learn more:
+
+- [Buttons](/ui-components/buttons) - Learn about button variants and usage
+- [Cards](/ui-components/cards) - Understand card structure and composition
+- [Forms](/ui-components/forms) - Master form validation and components
+- [Animations](/ui-components/animations) - Discover animation patterns with Framer Motion

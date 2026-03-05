@@ -1,0 +1,228 @@
+---
+title: 'Local Development Setup'
+description: 'Set up your development environment and learn the workflow for building the React portfolio'
+---
+
+## Prerequisites
+
+Before starting, ensure you have:
+
+- **Node.js** 18+ or **Bun** runtime installed
+- **Git** for version control
+- A code editor (VS Code recommended)
+
+## Installation
+
+<Steps>
+  <Step title="Clone the repository">
+    ```bash
+    git clone <repository-url>
+    cd vite_react_shadcn_ts
+    ```
+  </Step>
+
+  <Step title="Install dependencies">
+    Using npm:
+    ```bash
+    npm install
+    ```
+
+    Or using Bun (faster):
+    ```bash
+    bun install
+    ```
+  </Step>
+
+  <Step title="Start the development server">
+    ```bash
+    npm run dev
+    ```
+
+    The application will be available at `http://localhost:5173`
+  </Step>
+</Steps>
+
+<Note>
+  The dev server runs on port **5173** by default and listens on all network interfaces (`::`), allowing access from other devices on your network.
+</Note>
+
+## Development Workflow
+
+### Hot Module Replacement (HMR)
+
+Vite provides blazing-fast HMR powered by **React SWC** for instant updates:
+
+- Changes to React components refresh immediately
+- CSS updates apply without full page reload
+- State is preserved during updates when possible
+- HMR overlay is disabled for a cleaner development experience
+
+<Tip>
+  The project uses `@vitejs/plugin-react-swc` which provides faster refresh times compared to the standard Babel transform.
+</Tip>
+
+### Path Aliases
+
+The `@` alias points to the `src` directory for cleaner imports:
+
+```typescript
+// Instead of:
+import { Button } from '../../../components/ui/button'
+
+// Use:
+import { Button } from '@/components/ui/button'
+```
+
+Configured in `vite.config.ts:16-18`:
+
+```typescript
+resolve: {
+  alias: {
+    "@": path.resolve(__dirname, "./src"),
+  },
+}
+```
+
+## Available npm Scripts
+
+<CodeGroup>
+
+```bash Development
+# Start development server with HMR
+npm run dev
+```
+
+```bash Production Build
+# Build for production
+npm run build
+
+# Build in development mode (with source maps)
+npm run build:dev
+```
+
+```bash Preview
+# Preview production build locally
+npm run preview
+```
+
+```bash Linting
+# Run ESLint on all files
+npm run lint
+```
+
+```bash Testing
+# Run all tests once
+npm run test
+
+# Run tests in watch mode
+npm run test:watch
+```
+
+</CodeGroup>
+
+## Running Tests with Vitest
+
+### Test Configuration
+
+The project uses **Vitest** with **jsdom** for unit and component testing.
+
+Key configuration from `vitest.config.ts:7-11`:
+
+```typescript
+test: {
+  environment: "jsdom",
+  globals: true,
+  setupFiles: ["./src/test/setup.ts"],
+  include: ["src/**/*.{test,spec}.{ts,tsx}"],
+}
+```
+
+### Writing Tests
+
+Tests are located in `src/test/` and follow the pattern `*.test.ts` or `*.spec.tsx`:
+
+```typescript
+import { describe, it, expect } from "vitest";
+
+describe("example", () => {
+  it("should pass", () => {
+    expect(true).toBe(true);
+  });
+});
+```
+
+### Test Setup
+
+The `src/test/setup.ts:1` file imports `@testing-library/jest-dom` for enhanced matchers and configures `window.matchMedia` mock for testing components that use media queries.
+
+<Warning>
+  Tests run in a jsdom environment. Browser-specific APIs may need additional mocking.
+</Warning>
+
+## Code Linting with ESLint
+
+### ESLint Configuration
+
+The project uses the modern **flat config** format with TypeScript ESLint.
+
+From `eslint.config.js:7-25`:
+
+```javascript
+export default tseslint.config(
+  { ignores: ["dist"] },
+  {
+    extends: [js.configs.recommended, ...tseslint.configs.recommended],
+    files: ["**/*.{ts,tsx}"],
+    plugins: {
+      "react-hooks": reactHooks,
+      "react-refresh": reactRefresh,
+    },
+    rules: {
+      ...reactHooks.configs.recommended.rules,
+      "react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
+      "@typescript-eslint/no-unused-vars": "off",
+    },
+  },
+);
+```
+
+### Enabled Plugins
+
+- **react-hooks**: Enforces Rules of Hooks
+- **react-refresh**: Ensures components are HMR-compatible
+- **typescript-eslint**: TypeScript-specific linting rules
+
+### Running the Linter
+
+```bash
+# Check for linting errors
+npm run lint
+
+# Auto-fix issues (when possible)
+npm run lint -- --fix
+```
+
+## Troubleshooting
+
+<Card title="Port Already in Use" icon="warning">
+  If port 5173 is already in use, either kill the process or modify the port in `vite.config.ts:9`.
+</Card>
+
+<Card title="Module Resolution Errors" icon="warning">
+  Ensure path aliases are configured in both `vite.config.ts` and `tsconfig.json`. The `@` alias must point to `./src`.
+</Card>
+
+<Card title="Tests Failing" icon="warning">
+  Check that `@testing-library/jest-dom` is imported in `src/test/setup.ts:1` and Vitest is using the jsdom environment.
+</Card>
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Project Structure" icon="folder" href="./project-structure">
+    Learn about the directory organization and file conventions
+  </Card>
+  <Card title="Building & Deploying" icon="rocket" href="./building-deploying">
+    Build for production and deploy to hosting platforms
+  </Card>
+</CardGroup>

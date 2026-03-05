@@ -1,0 +1,328 @@
+---
+title: 'Project Structure'
+description: 'Understanding the directory organization, file conventions, and architecture of the React portfolio'
+---
+
+## Directory Overview
+
+The project follows a standard Vite + React + TypeScript structure with shadcn/ui components:
+
+```
+vite_react_shadcn_ts/
+├── public/                 # Static assets
+│   ├── favicon.svg
+│   ├── placeholder.svg
+│   └── robots.txt
+├── src/                    # Source code
+│   ├── components/         # React components
+│   │   ├── ui/            # shadcn/ui components
+│   │   ├── AboutSection.tsx
+│   │   ├── ContactSection.tsx
+│   │   ├── ExperienceSection.tsx
+│   │   ├── HeroSection.tsx
+│   │   ├── NavLink.tsx
+│   │   ├── Navbar.tsx
+│   │   └── SkillsSection.tsx
+│   ├── hooks/             # Custom React hooks
+│   │   ├── use-mobile.tsx
+│   │   └── use-toast.ts
+│   ├── lib/               # Utility functions
+│   │   └── utils.ts
+│   ├── pages/             # Page components
+│   │   ├── Index.tsx
+│   │   └── NotFound.tsx
+│   ├── test/              # Test files
+│   │   ├── setup.ts
+│   │   └── example.test.ts
+│   ├── App.tsx            # Root application component
+│   ├── main.tsx           # Application entry point
+│   ├── index.css          # Global styles
+│   └── vite-env.d.ts      # Vite type definitions
+├── components.json         # shadcn/ui configuration
+├── eslint.config.js        # ESLint configuration
+├── index.html              # HTML entry point
+├── package.json            # Dependencies and scripts
+├── postcss.config.js       # PostCSS configuration
+├── tailwind.config.ts      # Tailwind CSS configuration
+├── tsconfig.json           # TypeScript configuration
+├── vite.config.ts          # Vite configuration
+└── vitest.config.ts        # Vitest test configuration
+```
+
+## Key Directories Explained
+
+### `/src/components/`
+
+**Purpose**: Reusable React components organized by feature.
+
+<Tip>
+  Component files use PascalCase naming (e.g., `HeroSection.tsx`, `Navbar.tsx`).
+</Tip>
+
+**Custom Components** (7 files):
+- `AboutSection.tsx` - About/bio section
+- `ContactSection.tsx` - Contact form and information
+- `ExperienceSection.tsx` - Work experience timeline
+- `HeroSection.tsx` - Landing hero banner
+- `NavLink.tsx` - Navigation link component
+- `Navbar.tsx` - Main navigation bar
+- `SkillsSection.tsx` - Skills showcase section
+
+### `/src/components/ui/`
+
+**Purpose**: shadcn/ui component library (59 components).
+
+These are highly customizable, accessible components built on **Radix UI** primitives:
+
+- **Layout**: `card`, `separator`, `sheet`, `sidebar`, `tabs`
+- **Forms**: `button`, `input`, `textarea`, `checkbox`, `select`, `form`, `label`
+- **Feedback**: `alert`, `toast`, `toaster`, `sonner`, `progress`, `skeleton`
+- **Overlays**: `dialog`, `alert-dialog`, `drawer`, `popover`, `hover-card`, `tooltip`
+- **Navigation**: `navigation-menu`, `menubar`, `breadcrumb`, `pagination`
+- **Data Display**: `table`, `avatar`, `badge`, `chart`, `calendar`, `carousel`
+- **Interactive**: `accordion`, `collapsible`, `dropdown-menu`, `context-menu`, `command`
+
+<Note>
+  All UI components are managed via the `components.json:2` config and can be updated using the shadcn CLI.
+</Note>
+
+### `/src/hooks/`
+
+**Purpose**: Custom React hooks for shared logic.
+
+```typescript
+// Example usage of custom hooks
+import { useToast } from '@/hooks/use-toast'
+import { useMobile } from '@/hooks/use-mobile'
+
+const { toast } = useToast()
+const isMobile = useMobile()
+```
+
+- `use-toast.ts` - Toast notification system state management
+- `use-mobile.tsx` - Responsive breakpoint detection hook
+
+### `/src/lib/`
+
+**Purpose**: Utility functions and helpers.
+
+**Key file**: `utils.ts` contains the `cn()` function for conditional class merging:
+
+```typescript
+import { cn } from '@/lib/utils'
+
+<div className={cn("base-class", isActive && "active-class")} />
+```
+
+### `/src/pages/`
+
+**Purpose**: Top-level page components mapped to routes.
+
+From `src/App.tsx:16-20`:
+
+```typescript
+<Routes>
+  <Route path="/" element={<Index />} />
+  <Route path="*" element={<NotFound />} />
+</Routes>
+```
+
+- `Index.tsx` - Homepage with all portfolio sections
+- `NotFound.tsx` - 404 error page
+
+### `/src/test/`
+
+**Purpose**: Test configuration and test files.
+
+- `setup.ts` - Global test setup (imports `@testing-library/jest-dom`, mocks `window.matchMedia`)
+- `example.test.ts` - Example test demonstrating Vitest usage
+
+<Warning>
+  Place all test files matching `*.test.ts` or `*.spec.tsx` anywhere in `/src/` - they will be automatically discovered by Vitest.
+</Warning>
+
+## Key Files Explained
+
+### Application Entry Points
+
+<Steps>
+  <Step title="index.html">
+    Root HTML file loaded by the browser. References `/src/main.tsx:20` as the module entry point.
+
+    ```html
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+    ```
+  </Step>
+
+  <Step title="src/main.tsx">
+    JavaScript entry point that mounts the React app to the DOM.
+
+    ```typescript
+    import { createRoot } from "react-dom/client";
+    import App from "./App.tsx";
+    import "./index.css";
+
+    createRoot(document.getElementById("root")!).render(<App />);
+    ```
+  </Step>
+
+  <Step title="src/App.tsx">
+    Root React component that configures:
+    - **React Query** (`@tanstack/react-query:4`) for data fetching
+    - **React Router** (`react-router-dom:5`) for routing
+    - **Toast notifications** (Toaster, Sonner)
+    - **Tooltip provider** for accessible tooltips
+  </Step>
+</Steps>
+
+### Configuration Files
+
+<CodeGroup>
+
+```typescript vite.config.ts
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react-swc";
+import path from "path";
+
+export default defineConfig(({ mode }) => ({
+  server: {
+    host: "::",
+    port: 5173,
+    hmr: { overlay: false },
+  },
+  plugins: [react()],
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "./src"),
+    },
+  },
+}));
+```
+
+```typescript tailwind.config.ts
+import type { Config } from "tailwindcss";
+
+export default {
+  darkMode: ["class"],
+  content: [
+    "./src/**/*.{ts,tsx}",
+  ],
+  theme: {
+    extend: {
+      fontFamily: {
+        heading: ["Space Grotesk", "sans-serif"],
+        body: ["Inter", "sans-serif"],
+      },
+      colors: {
+        // HSL-based design tokens
+      },
+    },
+  },
+  plugins: [require("tailwindcss-animate")],
+} satisfies Config;
+```
+
+```json components.json
+{
+  "$schema": "https://ui.shadcn.com/schema.json",
+  "style": "default",
+  "tailwind": {
+    "config": "tailwind.config.ts",
+    "css": "src/index.css",
+    "baseColor": "slate",
+    "cssVariables": true
+  },
+  "aliases": {
+    "components": "@/components",
+    "utils": "@/lib/utils",
+    "ui": "@/components/ui"
+  }
+}
+```
+
+</CodeGroup>
+
+## Import Conventions
+
+### Path Aliases
+
+Configured in `components.json:13-18`:
+
+```typescript
+// Component imports
+import { Button } from '@/components/ui/button'
+import { Navbar } from '@/components/Navbar'
+
+// Utility imports
+import { cn } from '@/lib/utils'
+
+// Hook imports
+import { useToast } from '@/hooks/use-toast'
+```
+
+### Absolute vs Relative Imports
+
+<Tip>
+  **Always use the `@` alias** for imports within `src/`. Avoid relative paths like `../../components/ui/button`.
+</Tip>
+
+```typescript
+// ✅ Good
+import { Card } from '@/components/ui/card'
+
+// ❌ Avoid
+import { Card } from '../../../components/ui/card'
+```
+
+## File Naming Patterns
+
+| Type | Pattern | Example |
+|------|---------|----------|
+| **Components** | PascalCase `.tsx` | `HeroSection.tsx`, `Navbar.tsx` |
+| **UI Components** | kebab-case `.tsx` | `button.tsx`, `alert-dialog.tsx` |
+| **Hooks** | kebab-case `use-*.ts` | `use-toast.ts`, `use-mobile.tsx` |
+| **Utils** | kebab-case `.ts` | `utils.ts` |
+| **Pages** | PascalCase `.tsx` | `Index.tsx`, `NotFound.tsx` |
+| **Tests** | `*.test.ts` or `*.spec.tsx` | `example.test.ts` |
+| **Config** | kebab-case `.ts`/`.js` | `vite.config.ts`, `eslint.config.js` |
+
+## Technology Stack
+
+<CardGroup cols={2}>
+  <Card title="React 18.3" icon="react">
+    UI library with hooks and modern features
+  </Card>
+  <Card title="TypeScript 5.8" icon="code">
+    Static typing for better DX and fewer bugs
+  </Card>
+  <Card title="Vite 5.4" icon="bolt">
+    Lightning-fast build tool and dev server
+  </Card>
+  <Card title="Tailwind CSS 3.4" icon="palette">
+    Utility-first CSS framework
+  </Card>
+  <Card title="shadcn/ui" icon="layer-group">
+    59 accessible components via Radix UI
+  </Card>
+  <Card title="React Router 6.30" icon="route">
+    Client-side routing with future flags enabled
+  </Card>
+  <Card title="TanStack Query 5.83" icon="database">
+    Powerful data fetching and caching
+  </Card>
+  <Card title="Framer Motion 12.34" icon="wand-magic-sparkles">
+    Production-ready animation library
+  </Card>
+</CardGroup>
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Local Setup" icon="laptop-code" href="./local-setup">
+    Set up your development environment
+  </Card>
+  <Card title="Building & Deploying" icon="rocket" href="./building-deploying">
+    Learn how to build and deploy the application
+  </Card>
+</CardGroup>

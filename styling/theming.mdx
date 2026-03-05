@@ -1,0 +1,363 @@
+---
+title: "Theming System"
+description: "CSS variables, design tokens, and dark mode configuration"
+---
+
+## Overview
+
+The theming system uses CSS variables (custom properties) to create a flexible, maintainable design token architecture. All theme values are defined in `src/index.css` and referenced throughout the application.
+
+## Design Tokens
+
+Design tokens are defined in the `:root` selector using HSL color format:
+
+```css index.css
+@layer base {
+  :root {
+    --background: 220 20% 7%;
+    --foreground: 210 20% 92%;
+    --primary: 207 90% 54%;
+    --radius: 0.75rem;
+    /* ... more tokens */
+  }
+}
+```
+
+<Note>
+HSL values are stored without the `hsl()` wrapper, allowing flexible composition with opacity modifiers.
+</Note>
+
+## Color Palette
+
+### Core Colors
+
+The application uses a dark color scheme optimized for professional portfolios:
+
+<CodeGroup>
+```css Background Colors
+--background: 220 20% 7%;        /* Dark navy blue */
+--foreground: 210 20% 92%;       /* Light gray text */
+```
+
+```css Card Colors
+--card: 220 18% 10%;             /* Slightly lighter than bg */
+--card-foreground: 210 20% 92%;  /* Same as foreground */
+```
+
+```css Primary Brand
+--primary: 207 90% 54%;          /* Vibrant blue */
+--primary-foreground: 220 20% 7%; /* Dark text on primary */
+```
+
+```css Secondary
+--secondary: 220 15% 15%;        /* Subtle gray */
+--secondary-foreground: 210 20% 85%; /* Light text */
+```
+</CodeGroup>
+
+### Semantic Colors
+
+| Token | HSL Value | Usage |
+|-------|-----------|-------|
+| `--muted` | `220 15% 13%` | Subtle backgrounds |
+| `--muted-foreground` | `215 15% 55%` | Dimmed text |
+| `--accent` | `207 90% 54%` | Highlights, links |
+| `--destructive` | `0 84.2% 60.2%` | Error states |
+| `--border` | `220 15% 18%` | Borders, dividers |
+| `--input` | `220 15% 18%` | Input borders |
+| `--ring` | `207 90% 54%` | Focus rings |
+
+### Sidebar Colors
+
+Dedicated color tokens for sidebar components:
+
+```css
+--sidebar-background: 220 18% 10%;
+--sidebar-foreground: 210 20% 92%;
+--sidebar-primary: 207 90% 54%;
+--sidebar-primary-foreground: 220 20% 7%;
+--sidebar-accent: 220 15% 15%;
+--sidebar-accent-foreground: 210 20% 85%;
+--sidebar-border: 220 15% 18%;
+--sidebar-ring: 207 90% 54%;
+```
+
+## Custom Design Tokens
+
+### Border Radius
+
+A single radius variable controls corner roundness:
+
+```css
+--radius: 0.75rem;  /* 12px */
+```
+
+Tailwind extends this with calculated variations:
+- `rounded-lg`: `var(--radius)` → 12px
+- `rounded-md`: `calc(var(--radius) - 2px)` → 10px
+- `rounded-sm`: `calc(var(--radius) - 4px)` → 8px
+
+### Gradient Tokens
+
+#### Hero Gradient
+
+```css
+--hero-gradient: linear-gradient(
+  135deg,
+  hsl(220 20% 7%) 0%,
+  hsl(220 18% 12%) 50%,
+  hsl(207 40% 12%) 100%
+);
+```
+
+**Usage:**
+```tsx HeroSection.tsx
+<section style={{ background: "var(--hero-gradient)" }}>
+  Hero content
+</section>
+```
+
+#### Glow Effects
+
+```css
+--glow-primary: 0 0 60px hsl(207 90% 54% / 0.15);
+--glow-strong: 0 0 120px hsl(207 90% 54% / 0.25);
+```
+
+<Tip>
+Glow effects create depth and visual interest around primary UI elements.
+</Tip>
+
+## Dark Mode Configuration
+
+The application uses class-based dark mode:
+
+```typescript tailwind.config.ts
+darkMode: ["class"]
+```
+
+<Note>
+Currently, the portfolio uses a dark theme by default. Light mode can be implemented by adding a `.light` class variant in CSS.
+</Note>
+
+### Implementing Light Mode
+
+To add light mode support:
+
+```css index.css
+@layer base {
+  :root {
+    /* Dark theme (default) */
+  }
+
+  .light {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --primary: 207 90% 54%;
+    /* ... light theme tokens */
+  }
+}
+```
+
+## Typography System
+
+### Font Imports
+
+Fonts are imported from Google Fonts:
+
+```css index.css
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap');
+```
+
+### Font Application
+
+Base styles apply fonts globally:
+
+```css
+@layer base {
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Inter', sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Space Grotesk', sans-serif;
+  }
+}
+```
+
+<Tabs>
+  <Tab title="Inter (Body)">
+    - Weights: 300, 400, 500, 600
+    - Usage: Paragraphs, UI text
+    - Optimized for readability
+  </Tab>
+  <Tab title="Space Grotesk (Headings)">
+    - Weights: 300, 400, 500, 600, 700
+    - Usage: All heading levels
+    - Modern, geometric style
+  </Tab>
+</Tabs>
+
+## Custom Utility Classes
+
+Three custom utilities are defined in the `@layer utilities` block:
+
+### Text Gradient
+
+```css
+.text-gradient {
+  @apply bg-clip-text text-transparent;
+  background-image: linear-gradient(
+    135deg,
+    hsl(207 90% 54%),
+    hsl(207 80% 70%)
+  );
+}
+```
+
+**Usage:**
+```tsx
+<span className="text-gradient">Carrascosa</span>
+```
+
+Creates a vibrant blue gradient text effect.
+
+### Border Glow
+
+```css
+.border-glow {
+  border-color: hsl(207 90% 54% / 0.3);
+  box-shadow: var(--glow-primary);
+}
+```
+
+**Usage:**
+```tsx
+<div className="border border-glow">
+  Card with glowing border
+</div>
+```
+
+### Section Divider
+
+```css
+.section-divider {
+  @apply w-full h-px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    hsl(207 90% 54% / 0.3),
+    transparent
+  );
+}
+```
+
+**Usage:**
+```tsx
+<div className="section-divider" />
+```
+
+Creates a horizontal gradient divider line.
+
+## Color Usage in Components
+
+### HeroSection Example
+
+```tsx HeroSection.tsx
+<motion.p className="text-primary font-heading text-sm tracking-[0.3em] uppercase mb-6">
+  Chief Technology Officer
+</motion.p>
+
+<motion.p className="text-muted-foreground text-lg md:text-xl">
+  +20 años liderando tecnología...
+  <span className="text-primary font-medium">Grupo SADE</span>.
+</motion.p>
+
+<motion.p className="text-muted-foreground/60 text-sm">
+  Madrid, España
+</motion.p>
+```
+
+### Navbar Example
+
+```tsx Navbar.tsx
+<motion.nav className={
+  scrolled
+    ? "bg-background/80 backdrop-blur-lg border-b border-border"
+    : ""
+}>
+  <a className="text-sm text-muted-foreground hover:text-foreground">
+    Sobre mí
+  </a>
+</motion.nav>
+```
+
+## HSL Color Format Benefits
+
+<Tip>
+**Why HSL?** HSL (Hue, Saturation, Lightness) makes it easy to create color variations while maintaining visual harmony.
+</Tip>
+
+### Opacity Modifiers
+
+Tailwind's opacity syntax works seamlessly:
+
+```tsx
+<div className="bg-background/80">      {/* 80% opacity */}
+<p className="text-muted-foreground/60"> {/* 60% opacity */}
+```
+
+### Color Consistency
+
+Changing a single CSS variable updates the color throughout:
+
+```css
+/* Change primary color globally */
+--primary: 142 76% 36%;  /* Now green instead of blue */
+```
+
+## Theming Best Practices
+
+1. **Use CSS Variables**: Always reference tokens, never hardcode colors
+2. **Maintain Contrast**: Ensure foreground/background pairs have sufficient contrast
+3. **Test Opacity**: Verify colors work at different opacity levels
+4. **Semantic Naming**: Use purpose-based names (`primary`, `muted`) over descriptive ones (`blue`, `gray`)
+
+## Customization Guide
+
+### Changing the Primary Color
+
+```css index.css
+:root {
+  --primary: 142 76% 36%;           /* Green */
+  --ring: 142 76% 36%;              /* Update focus ring */
+  --accent: 142 76% 36%;            /* Update accent */
+  --sidebar-primary: 142 76% 36%;   /* Update sidebar */
+}
+```
+
+Update gradient utilities:
+
+```css
+.text-gradient {
+  background-image: linear-gradient(
+    135deg,
+    hsl(142 76% 36%),
+    hsl(142 70% 50%)
+  );
+}
+```
+
+### Adjusting Border Radius
+
+```css
+--radius: 0.5rem;  /* More subtle corners */
+--radius: 1rem;    /* Rounder corners */
+--radius: 0;       /* Sharp corners */
+```
+
+## Related Documentation
+
+- [Tailwind CSS Setup](/styling/tailwind) - Configuration and utilities
+- [Responsive Design](/styling/responsive-design) - Breakpoints and patterns

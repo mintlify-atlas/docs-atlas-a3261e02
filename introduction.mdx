@@ -1,0 +1,161 @@
+---
+title: Introduction
+description: Welcome to the David Carrascosa Digital Portfolio documentation
+---
+
+# Introduction
+
+Welcome to the documentation for David Carrascosa's digital portfolio - a modern, performant, and responsive web application showcasing professional experience, skills, and expertise in technology leadership, IT consulting, and software development.
+
+## What is This Portfolio?
+
+This is a personal portfolio website built with cutting-edge frontend technologies to deliver a fast, engaging, and accessible user experience. The site features:
+
+- **Responsive Design**: Optimized for both desktop and mobile devices
+- **Smooth Animations**: Fluid transitions powered by Framer Motion
+- **Optimized Performance**: Lightning-fast loading with Vite and React
+- **Reusable Components**: Built with shadcn/ui component library
+- **Modern Styling**: Tailwind CSS for maintainable, utility-first styling
+- **Type Safety**: Full TypeScript implementation
+- **Tested**: Quality assurance with Vitest testing framework
+
+## Tech Stack
+
+The portfolio is built with a modern, production-ready stack:
+
+<CardGroup cols={2}>
+  <Card title="Frontend Framework" icon="react">
+    **React 18.3.1** - Component-based UI library with hooks and concurrent features
+  </Card>
+  
+  <Card title="Build Tool" icon="bolt">
+    **Vite 5.4** - Next-generation bundler with sub-100ms recompilation
+  </Card>
+  
+  <Card title="Type Safety" icon="code">
+    **TypeScript 5.8** - Static typing for robust, maintainable code
+  </Card>
+  
+  <Card title="Styling" icon="palette">
+    **Tailwind CSS 3.4** - Utility-first CSS framework for responsive design
+  </Card>
+</CardGroup>
+
+### Core Dependencies
+
+| Technology | Version | Purpose |
+|------------|---------|----------|
+| **Vite** | 5.4.19 | Build tool and dev server with fast recompilation |
+| **React** | 18.3.1 | Component library and UI rendering |
+| **TypeScript** | 5.8.3 | Type safety and enhanced developer experience |
+| **Tailwind CSS** | 3.4.17 | Utility-first styling and responsive design |
+| **shadcn/ui** | Latest | Accessible, customizable component system |
+| **Framer Motion** | 12.34.5 | Animation library for smooth transitions |
+| **React Router** | 6.30.1 | Client-side routing and navigation |
+| **TanStack Query** | 5.83.0 | Server state management |
+| **Vitest** | 3.2.4 | Unit and integration testing |
+| **Lucide React** | 0.462.0 | Modern icon library |
+
+### UI Component Library
+
+The project uses **shadcn/ui**, built on top of Radix UI primitives:
+
+- 40+ accessible, customizable components
+- Full TypeScript support
+- Tailwind CSS integration
+- Dark mode support with `next-themes`
+- Form handling with `react-hook-form` and `zod` validation
+
+<Note>
+  All components are located in `src/components/ui/` and can be customized via the `components.json` configuration file.
+</Note>
+
+## Architecture Overview
+
+The portfolio follows a component-based architecture with clear separation of concerns:
+
+```
+src/
+├── components/
+│   ├── ui/                      # Reusable shadcn/ui components
+│   │   ├── button.tsx
+│   │   ├── card.tsx
+│   │   ├── dialog.tsx
+│   │   └── ... (40+ components)
+│   ├── HeroSection.tsx          # Landing hero section
+│   ├── AboutSection.tsx         # About me content
+│   ├── SkillsSection.tsx        # Technical skills showcase
+│   ├── ExperienceSection.tsx    # Professional experience
+│   ├── ContactSection.tsx       # Contact form and info
+│   ├── Navbar.tsx               # Navigation header
+│   └── NavLink.tsx              # Navigation link component
+├── pages/
+│   ├── Index.tsx                # Main landing page
+│   └── NotFound.tsx             # 404 error page
+├── hooks/
+│   └── use-mobile.tsx           # Custom hook for responsive behavior
+├── lib/
+│   └── utils.ts                 # Utility functions (cn, etc.)
+├── App.tsx                      # Root app component
+└── main.tsx                     # Application entry point
+```
+
+### Key Features
+
+<Steps>
+  <Step title="Component-Based Design">
+    The entire portfolio is built using reusable React components, making it easy to maintain and extend.
+  </Step>
+  
+  <Step title="Type-Safe Development">
+    TypeScript provides compile-time type checking and IntelliSense support throughout the codebase.
+  </Step>
+  
+  <Step title="Hot Module Replacement">
+    Vite's HMR enables instant feedback during development - changes appear in under 100ms.
+  </Step>
+  
+  <Step title="Optimized Production Builds">
+    Tree-shaking, code-splitting, and minification deliver minimal bundle sizes.
+  </Step>
+</Steps>
+
+## Project Configuration
+
+The portfolio uses several configuration files:
+
+- **`vite.config.ts`**: Build configuration with path aliases (`@/` → `src/`)
+- **`tailwind.config.ts`**: Tailwind CSS customization and theme
+- **`components.json`**: shadcn/ui component configuration
+- **`tsconfig.json`**: TypeScript compiler options
+- **`eslint.config.js`**: Code quality and linting rules
+
+<Tip>
+  The project uses path aliases - import from `@/components` instead of relative paths like `../../components`.
+</Tip>
+
+## Development Workflow
+
+The portfolio supports modern development practices:
+
+- **Fast Refresh**: Instant updates without losing component state
+- **Hot Reload**: Automatic browser refresh on file changes
+- **TypeScript Checking**: Real-time type validation
+- **ESLint**: Code quality enforcement
+- **Vitest**: Fast unit and integration testing
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Quick Start" icon="rocket" href="/quickstart">
+    Get the portfolio running locally in under 5 minutes
+  </Card>
+  
+  <Card title="Installation" icon="download" href="/installation">
+    Detailed installation guide with prerequisites and troubleshooting
+  </Card>
+</CardGroup>
+
+<Warning>
+  This portfolio requires **Node.js 18+** and a package manager (npm, yarn, pnpm, or bun).
+</Warning>

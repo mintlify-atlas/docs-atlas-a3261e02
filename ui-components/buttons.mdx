@@ -1,0 +1,343 @@
+---
+title: Button Component
+description: Flexible button component with multiple variants and sizes built on Radix UI Slot
+---
+
+## Overview
+
+The Button component is a fundamental UI element that triggers actions. It's built using **class-variance-authority (CVA)** for variant management and supports polymorphic behavior through **Radix UI's Slot component**.
+
+<Note>
+  Location: `src/components/ui/button.tsx`
+</Note>
+
+## Implementation
+
+The button component uses CVA to manage variants and sizes:
+
+```tsx
+import * as React from "react"
+import { Slot } from "@radix-ui/react-slot"
+import { cva, type VariantProps } from "class-variance-authority"
+import { cn } from "@/lib/utils"
+
+const buttonVariants = cva(
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+  {
+    variants: {
+      variant: {
+        default: "bg-primary text-primary-foreground hover:bg-primary/90",
+        destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90",
+        outline: "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
+        secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
+        ghost: "hover:bg-accent hover:text-accent-foreground",
+        link: "text-primary underline-offset-4 hover:underline",
+      },
+      size: {
+        default: "h-10 px-4 py-2",
+        sm: "h-9 rounded-md px-3",
+        lg: "h-11 rounded-md px-8",
+        icon: "h-10 w-10",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+      size: "default",
+    },
+  }
+)
+```
+
+## Button Variants
+
+<Tabs>
+  <Tab title="Default">
+    The primary button style with solid background.
+
+    ```tsx
+    <Button variant="default">Save Changes</Button>
+    ```
+
+    **Use cases:**
+    - Primary actions
+    - Form submissions
+    - Call-to-action buttons
+  </Tab>
+
+  <Tab title="Destructive">
+    For dangerous or destructive actions.
+
+    ```tsx
+    <Button variant="destructive">Delete Account</Button>
+    ```
+
+    **Use cases:**
+    - Delete operations
+    - Irreversible actions
+    - Warning confirmations
+  </Tab>
+
+  <Tab title="Outline">
+    Subtle button with border only.
+
+    ```tsx
+    <Button variant="outline">Cancel</Button>
+    ```
+
+    **Use cases:**
+    - Secondary actions
+    - Cancel buttons
+    - Less prominent actions
+  </Tab>
+
+  <Tab title="Secondary">
+    Alternative solid button style.
+
+    ```tsx
+    <Button variant="secondary">Learn More</Button>
+    ```
+
+    **Use cases:**
+    - Alternative actions
+    - Supporting buttons
+    - Secondary CTAs
+  </Tab>
+
+  <Tab title="Ghost">
+    Minimal button with hover effect only.
+
+    ```tsx
+    <Button variant="ghost">View Details</Button>
+    ```
+
+    **Use cases:**
+    - Tertiary actions
+    - Navigation items
+    - Subtle interactions
+  </Tab>
+
+  <Tab title="Link">
+    Styled like a hyperlink.
+
+    ```tsx
+    <Button variant="link">Read More</Button>
+    ```
+
+    **Use cases:**
+    - Inline text actions
+    - Navigation links
+    - Subtle CTAs
+  </Tab>
+</Tabs>
+
+## Button Sizes
+
+```tsx
+// Small button
+<Button size="sm">Small</Button>
+
+// Default button
+<Button size="default">Default</Button>
+
+// Large button
+<Button size="lg">Large</Button>
+
+// Icon-only button (square)
+<Button size="icon">
+  <Mail className="h-4 w-4" />
+</Button>
+```
+
+<CardGroup cols={2}>
+  <Card title="Small (sm)">
+    - Height: 36px (h-9)
+    - Padding: 12px horizontal
+    - Use for compact interfaces
+  </Card>
+  <Card title="Default">
+    - Height: 40px (h-10)
+    - Padding: 16px horizontal
+    - Standard button size
+  </Card>
+  <Card title="Large (lg)">
+    - Height: 44px (h-11)
+    - Padding: 32px horizontal
+    - Use for emphasis
+  </Card>
+  <Card title="Icon">
+    - Dimensions: 40x40px
+    - Equal width and height
+    - Perfect for icon buttons
+  </Card>
+</CardGroup>
+
+## Polymorphic Behavior with asChild
+
+The `asChild` prop allows the button to merge with a child component, useful for navigation:
+
+```tsx
+import { Button } from "@/components/ui/button"
+import { Link } from "react-router-dom"
+
+// Renders as a Link component but looks like a Button
+<Button asChild>
+  <Link to="/about">About Us</Link>
+</Button>
+
+// Renders as an anchor tag
+<Button asChild>
+  <a href="https://example.com" target="_blank">
+    External Link
+  </a>
+</Button>
+```
+
+<Tip>
+  Use `asChild` to maintain proper semantics when a button needs to be a link or other element.
+</Tip>
+
+## Button with Icons
+
+The button automatically styles child SVG icons:
+
+```tsx
+import { Mail, ArrowRight } from "lucide-react"
+import { Button } from "@/components/ui/button"
+
+// Icon before text
+<Button>
+  <Mail className="mr-2 h-4 w-4" />
+  Send Email
+</Button>
+
+// Icon after text
+<Button>
+  Continue
+  <ArrowRight className="ml-2 h-4 w-4" />
+</Button>
+
+// Icon only
+<Button size="icon">
+  <Mail className="h-4 w-4" />
+</Button>
+```
+
+## Real Usage Example
+
+From `src/components/ContactSection.tsx`:
+
+```tsx
+import { Linkedin, Globe, Mail } from "lucide-react"
+
+// Primary action with icon
+<a
+  href="https://www.linkedin.com/in/carrascosa"
+  target="_blank"
+  rel="noopener noreferrer"
+  className="inline-flex items-center gap-3 px-6 py-3 rounded-lg bg-primary text-primary-foreground font-heading font-medium hover:opacity-90 transition-opacity"
+>
+  <Linkedin className="w-5 h-5" />
+  LinkedIn
+</a>
+
+// Outline variant for secondary actions
+<a
+  href="https://www.grupo-sade.com"
+  target="_blank"
+  rel="noopener noreferrer"
+  className="inline-flex items-center gap-3 px-6 py-3 rounded-lg border border-border text-foreground font-heading font-medium hover:border-primary/50 transition-colors"
+>
+  <Globe className="w-5 h-5" />
+  Grupo SADE
+</a>
+```
+
+## Accessibility Features
+
+The button component includes built-in accessibility features:
+
+- **Focus Visible**: Clear focus ring on keyboard navigation
+- **Disabled State**: Proper disabled styling and pointer events
+- **ARIA Support**: Works with standard button ARIA attributes
+
+```tsx
+// Disabled button
+<Button disabled>Cannot Click</Button>
+
+// With ARIA label
+<Button aria-label="Close dialog" size="icon">
+  <X className="h-4 w-4" />
+</Button>
+```
+
+## Customization
+
+### Custom Styles
+
+```tsx
+<Button className="rounded-full font-bold uppercase tracking-wider">
+  Custom Styled
+</Button>
+```
+
+### New Variant
+
+Extend the buttonVariants:
+
+```tsx
+import { buttonVariants } from "@/components/ui/button"
+import { cn } from "@/lib/utils"
+
+export function SuccessButton({ children, className, ...props }) {
+  return (
+    <button
+      className={cn(
+        buttonVariants({ variant: "default" }),
+        "bg-green-600 hover:bg-green-700",
+        className
+      )}
+      {...props}
+    >
+      {children}
+    </button>
+  )
+}
+```
+
+## TypeScript Interface
+
+```tsx
+export interface ButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+    VariantProps<typeof buttonVariants> {
+  asChild?: boolean
+}
+```
+
+The interface extends:
+- Native button HTML attributes
+- CVA variant props (variant and size)
+- Custom `asChild` prop for polymorphism
+
+## Best Practices
+
+<CardGroup cols={2}>
+  <Card title="Do" icon="check">
+    - Use semantic variants (destructive for delete)
+    - Include descriptive text or aria-label
+    - Use appropriate sizes for context
+    - Leverage asChild for navigation
+  </Card>
+  <Card title="Don't" icon="x">
+    - Don't use multiple primary buttons
+    - Avoid vague labels like "Click Here"
+    - Don't disable without explanation
+    - Don't override core accessibility
+  </Card>
+</CardGroup>
+
+## Related Components
+
+- [Cards](/ui-components/cards) - Container components for content
+- [Forms](/ui-components/forms) - Form components with validation
+- [Animations](/ui-components/animations) - Animation patterns for buttons

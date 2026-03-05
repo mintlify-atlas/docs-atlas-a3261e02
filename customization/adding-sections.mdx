@@ -1,0 +1,560 @@
+---
+title: 'Adding New Sections'
+description: 'Learn how to create custom sections like Projects, Testimonials, or any other content'
+icon: 'plus'
+---
+
+This guide walks you through creating new sections for your portfolio while maintaining consistency with the existing design patterns.
+
+## Understanding the Section Pattern
+
+All sections in the portfolio follow a consistent structure:
+
+1. **Component file** in `src/components/` (e.g., `AboutSection.tsx`)
+2. **Section wrapper** with proper spacing and id
+3. **Motion animations** for scroll-based reveals
+4. **Responsive layout** using Tailwind CSS
+5. **Integration** in `src/pages/Index.tsx`
+
+## Creating a Projects Section
+
+Let's create a complete Projects section from scratch.
+
+<Steps>
+  <Step title="Create the Component File">
+    Create `src/components/ProjectsSection.tsx`:
+
+    ```tsx src/components/ProjectsSection.tsx
+    import { motion } from "framer-motion";
+    import { ExternalLink, Github } from "lucide-react";
+
+    const projects = [
+      {
+        title: "E-Commerce Platform",
+        description: "A full-stack e-commerce solution with real-time inventory management and payment processing.",
+        image: "/project-1.jpg",
+        tags: ["React", "Node.js", "MongoDB", "Stripe"],
+        demoUrl: "https://demo.example.com",
+        githubUrl: "https://github.com/username/project",
+      },
+      {
+        title: "Task Management App",
+        description: "Collaborative task management tool with real-time updates and team collaboration features.",
+        image: "/project-2.jpg",
+        tags: ["TypeScript", "Firebase", "Tailwind"],
+        demoUrl: "https://demo.example.com",
+        githubUrl: "https://github.com/username/project",
+      },
+      {
+        title: "AI Content Generator",
+        description: "AI-powered content generation tool using OpenAI API with custom templates and workflows.",
+        image: "/project-3.jpg",
+        tags: ["Python", "OpenAI", "FastAPI", "React"],
+        demoUrl: "https://demo.example.com",
+        githubUrl: "https://github.com/username/project",
+      },
+    ];
+
+    const ProjectsSection = () => {
+      return (
+        <section id="projects" className="py-24 md:py-32">
+          <div className="container px-6">
+            <div className="max-w-5xl mx-auto">
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6 }}
+                className="text-center mb-16"
+              >
+                <p className="text-primary font-heading text-sm tracking-[0.2em] uppercase mb-3">
+                  Portfolio
+                </p>
+                <h2 className="font-heading text-3xl md:text-5xl font-bold">
+                  Featured Projects
+                </h2>
+              </motion.div>
+
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {projects.map((project, i) => (
+                  <motion.div
+                    key={project.title}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: i * 0.1, duration: 0.5 }}
+                    className="bg-card border border-border rounded-lg overflow-hidden hover:border-primary/30 transition-all group"
+                  >
+                    {/* Project Image */}
+                    <div className="aspect-video bg-muted relative overflow-hidden">
+                      <img
+                        src={project.image}
+                        alt={project.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                    </div>
+
+                    {/* Project Content */}
+                    <div className="p-6">
+                      <h3 className="font-heading text-xl font-semibold mb-2">
+                        {project.title}
+                      </h3>
+                      <p className="text-muted-foreground text-sm leading-relaxed mb-4">
+                        {project.description}
+                      </p>
+
+                      {/* Tags */}
+                      <div className="flex flex-wrap gap-2 mb-4">
+                        {project.tags.map((tag) => (
+                          <span
+                            key={tag}
+                            className="text-xs font-medium px-2 py-1 rounded bg-primary/10 text-primary"
+                          >
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+
+                      {/* Links */}
+                      <div className="flex gap-3">
+                        <a
+                          href={project.demoUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-2 text-sm text-primary hover:underline"
+                        >
+                          <ExternalLink className="w-4 h-4" />
+                          Demo
+                        </a>
+                        <a
+                          href={project.githubUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-2 text-sm text-primary hover:underline"
+                        >
+                          <Github className="w-4 h-4" />
+                          Code
+                        </a>
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+      );
+    };
+
+    export default ProjectsSection;
+    ```
+
+    <Tip>
+      Replace the placeholder images and URLs with your actual project data.
+    </Tip>
+  </Step>
+
+  <Step title="Add to Main Page">
+    Import and add the section to `src/pages/Index.tsx`:
+
+    ```tsx src/pages/Index.tsx
+    import Navbar from "@/components/Navbar";
+    import HeroSection from "@/components/HeroSection";
+    import AboutSection from "@/components/AboutSection";
+    import ExperienceSection from "@/components/ExperienceSection";
+    import SkillsSection from "@/components/SkillsSection";
+    import ProjectsSection from "@/components/ProjectsSection";  // Add this
+    import ContactSection from "@/components/ContactSection";
+
+    const Index = () => {
+      return (
+        <div className="min-h-screen bg-background">
+          <Navbar />
+          <HeroSection />
+          <div className="section-divider" />
+          <AboutSection />
+          <div className="section-divider" />
+          <ExperienceSection />
+          <SkillsSection />
+          <div className="section-divider" />
+          <ProjectsSection />  {/* Add this */}
+          <div className="section-divider" />
+          <ContactSection />
+        </div>
+      );
+    };
+
+    export default Index;
+    ```
+  </Step>
+
+  <Step title="Update Navigation (Optional)">
+    If you have a navigation bar, add a link to the projects section in `src/components/Navbar.tsx`.
+  </Step>
+</Steps>
+
+## Creating a Testimonials Section
+
+Here's another example showing a testimonials section:
+
+<CodeGroup>
+```tsx Full Component
+import { motion } from "framer-motion";
+import { Quote } from "lucide-react";
+
+const testimonials = [
+  {
+    name: "John Smith",
+    role: "CEO, Tech Startup",
+    content: "Working with David transformed our business. His technical expertise and business acumen delivered results beyond our expectations.",
+    avatar: "/avatar-1.jpg",
+  },
+  {
+    name: "Sarah Johnson",
+    role: "Product Manager, SaaS Company",
+    content: "An exceptional professional who understands both the technical and business sides. Highly recommend for any complex project.",
+    avatar: "/avatar-2.jpg",
+  },
+  {
+    name: "Michael Chen",
+    role: "CTO, Enterprise Corp",
+    content: "The level of expertise and dedication is unmatched. Our digital transformation project was a complete success thanks to their leadership.",
+    avatar: "/avatar-3.jpg",
+  },
+];
+
+const TestimonialsSection = () => {
+  return (
+    <section id="testimonials" className="py-24 md:py-32 bg-card/50">
+      <div className="container px-6">
+        <div className="max-w-5xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-16"
+          >
+            <p className="text-primary font-heading text-sm tracking-[0.2em] uppercase mb-3">
+              Testimonials
+            </p>
+            <h2 className="font-heading text-3xl md:text-5xl font-bold">
+              What Clients Say
+            </h2>
+          </motion.div>
+
+          <div className="grid md:grid-cols-3 gap-6">
+            {testimonials.map((testimonial, i) => (
+              <motion.div
+                key={testimonial.name}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1, duration: 0.5 }}
+                className="bg-background border border-border rounded-lg p-6 relative"
+              >
+                <Quote className="w-8 h-8 text-primary/20 mb-4" />
+                <p className="text-muted-foreground leading-relaxed mb-6">
+                  {testimonial.content}
+                </p>
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-primary/10 overflow-hidden">
+                    <img
+                      src={testimonial.avatar}
+                      alt={testimonial.name}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div>
+                    <p className="font-heading font-semibold text-sm">
+                      {testimonial.name}
+                    </p>
+                    <p className="text-muted-foreground text-xs">
+                      {testimonial.role}
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default TestimonialsSection;
+```
+</CodeGroup>
+
+## Section Design Patterns
+
+Follow these patterns to maintain consistency:
+
+### Section Container
+
+Every section should follow this structure:
+
+```tsx
+<section id="section-name" className="py-24 md:py-32">
+  <div className="container px-6">
+    <div className="max-w-5xl mx-auto">
+      {/* Content */}
+    </div>
+  </div>
+</section>
+```
+
+### Section Header
+
+Use this pattern for section titles:
+
+```tsx
+<motion.div
+  initial={{ opacity: 0, y: 30 }}
+  whileInView={{ opacity: 1, y: 0 }}
+  viewport={{ once: true }}
+  transition={{ duration: 0.6 }}
+>
+  <p className="text-primary font-heading text-sm tracking-[0.2em] uppercase mb-3">
+    Section Label
+  </p>
+  <h2 className="font-heading text-3xl md:text-5xl font-bold mb-8">
+    Section Title
+  </h2>
+</motion.div>
+```
+
+### Card Grid
+
+For grid layouts of cards:
+
+```tsx
+<div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+  {items.map((item, i) => (
+    <motion.div
+      key={item.id}
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ delay: i * 0.1, duration: 0.5 }}
+      className="bg-card border border-border rounded-lg p-6 hover:border-primary/30 transition-all"
+    >
+      {/* Card content */}
+    </motion.div>
+  ))}
+</div>
+```
+
+## Animation Consistency
+
+### Stagger Animations
+
+Use staggered delays for lists and grids:
+
+```tsx
+transition={{ delay: i * 0.1, duration: 0.5 }}
+```
+
+Where `i` is the item index. This creates a cascading effect.
+
+### Scroll-Based Reveals
+
+Use `whileInView` for scroll-triggered animations:
+
+```tsx
+<motion.div
+  initial={{ opacity: 0, y: 30 }}
+  whileInView={{ opacity: 1, y: 0 }}
+  viewport={{ once: true }}  {/* Only animate once */}
+  transition={{ duration: 0.6 }}
+>
+```
+
+### Common Animation Patterns
+
+<CodeGroup>
+```tsx Fade Up
+initial={{ opacity: 0, y: 30 }}
+whileInView={{ opacity: 1, y: 0 }}
+```
+
+```tsx Fade In
+initial={{ opacity: 0 }}
+whileInView={{ opacity: 1 }}
+```
+
+```tsx Slide From Right
+initial={{ opacity: 0, x: 20 }}
+whileInView={{ opacity: 1, x: 0 }}
+```
+
+```tsx Scale Up
+initial={{ opacity: 0, scale: 0.9 }}
+whileInView={{ opacity: 1, scale: 1 }}
+```
+</CodeGroup>
+
+## Background Variations
+
+Alternate background colors for visual hierarchy:
+
+```tsx
+{/* Light background */}
+<section className="py-24 md:py-32 bg-card/50">
+
+{/* Default background */}
+<section className="py-24 md:py-32">
+
+{/* Darker background */}
+<section className="py-24 md:py-32 bg-background">
+```
+
+## Adding Section Dividers
+
+The portfolio uses gradient dividers between sections (defined in src/index.css:80-83):
+
+```tsx src/pages/Index.tsx
+<HeroSection />
+<div className="section-divider" />
+<AboutSection />
+```
+
+<Note>
+  Section dividers are optional and should be used between major sections for visual separation.
+</Note>
+
+## Complex Layout Example: Services Grid
+
+Here's a more complex example with a different layout:
+
+```tsx src/components/ServicesSection.tsx
+import { motion } from "framer-motion";
+import { Code, Palette, Rocket, Shield } from "lucide-react";
+
+const services = [
+  {
+    icon: Code,
+    title: "Web Development",
+    description: "Custom web applications built with modern frameworks and best practices.",
+    features: ["React & TypeScript", "Node.js Backend", "Responsive Design", "API Integration"],
+  },
+  {
+    icon: Palette,
+    title: "UI/UX Design",
+    description: "Beautiful, user-centered interfaces that delight users and drive engagement.",
+    features: ["User Research", "Wireframing", "Prototyping", "Design Systems"],
+  },
+  {
+    icon: Rocket,
+    title: "Product Strategy",
+    description: "Strategic planning and execution to bring your product vision to life.",
+    features: ["Market Analysis", "Product Roadmap", "MVP Development", "Launch Strategy"],
+  },
+  {
+    icon: Shield,
+    title: "Consulting",
+    description: "Expert guidance on technical architecture, team building, and scaling.",
+    features: ["Tech Stack Selection", "Team Training", "Code Review", "Best Practices"],
+  },
+];
+
+const ServicesSection = () => {
+  return (
+    <section id="services" className="py-24 md:py-32">
+      <div className="container px-6">
+        <div className="max-w-6xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-16"
+          >
+            <p className="text-primary font-heading text-sm tracking-[0.2em] uppercase mb-3">
+              Services
+            </p>
+            <h2 className="font-heading text-3xl md:text-5xl font-bold mb-4">
+              What I Offer
+            </h2>
+            <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+              Comprehensive solutions to help you build, launch, and scale your digital products
+            </p>
+          </motion.div>
+
+          <div className="grid md:grid-cols-2 gap-8">
+            {services.map((service, i) => (
+              <motion.div
+                key={service.title}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1, duration: 0.5 }}
+                className="bg-card border border-border rounded-lg p-8 hover:border-primary/30 transition-all group"
+              >
+                <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-6 group-hover:bg-primary/20 transition-colors">
+                  <service.icon className="w-6 h-6 text-primary" />
+                </div>
+                <h3 className="font-heading text-2xl font-semibold mb-3">
+                  {service.title}
+                </h3>
+                <p className="text-muted-foreground leading-relaxed mb-6">
+                  {service.description}
+                </p>
+                <ul className="space-y-2">
+                  {service.features.map((feature) => (
+                    <li
+                      key={feature}
+                      className="flex items-center text-sm text-muted-foreground"
+                    >
+                      <span className="w-1.5 h-1.5 rounded-full bg-primary mr-3" />
+                      {feature}
+                    </li>
+                  ))}
+                </ul>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default ServicesSection;
+```
+
+## Best Practices
+
+<Warning>
+  Always test your new sections on mobile devices to ensure responsive behavior.
+</Warning>
+
+### Do's
+
+- Use semantic HTML (`<section>`, `<article>`, etc.)
+- Include unique `id` attributes for anchor linking
+- Follow existing spacing patterns (`py-24 md:py-32`)
+- Use motion animations for scroll reveals
+- Keep content width consistent (`max-w-5xl` or `max-w-6xl`)
+- Use Lucide React icons for consistency
+- Include hover states on interactive elements
+
+### Don'ts
+
+- Don't mix different animation styles
+- Don't use arbitrary spacing values
+- Don't skip responsive classes
+- Don't forget accessibility (alt text, ARIA labels)
+- Don't hardcode colors (use theme variables)
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Content Customization" icon="pen-to-square" href="/customization/content">
+    Update text, skills, and personal information
+  </Card>
+  <Card title="Styling" icon="palette" href="/customization/styling">
+    Customize colors, fonts, and visual design
+  </Card>
+</CardGroup>

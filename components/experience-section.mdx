@@ -1,0 +1,411 @@
+---
+title: 'ExperienceSection'
+description: 'Timeline-based professional experience display with role details and tags'
+---
+
+## Overview
+
+The `ExperienceSection` component presents professional experience in a vertical timeline format. Each entry includes role details, company, period, description, and highlight tags.
+
+## Features
+
+- Vertical timeline with connecting line
+- Timeline dot indicators
+- Responsive card layout
+- Highlight tags with badge styling
+- Staggered entrance animations
+- Hover effects on cards
+- Structured experience data
+
+## Component Structure
+
+```tsx
+import { motion } from "framer-motion";
+
+const experiences = [
+  {
+    role: "Chief Technology Officer (CTO)",
+    company: "Grupo SADE",
+    period: "Actualidad",
+    description: "Liderando la estrategia tecnológica...",
+    highlights: ["IA Generativa", "Transformación Digital", "Liderazgo Técnico", "Estrategia IT"],
+  },
+  // ... more experiences
+];
+
+const ExperienceSection = () => {
+  return (
+    <section id="experience" className="py-24 md:py-32">
+      {/* Timeline content */}
+    </section>
+  );
+};
+```
+
+## Data Structure
+
+```typescript
+interface Experience {
+  role: string;         // Job title
+  company: string;      // Company name
+  period: string;       // Time period or date
+  description: string;  // Role description
+  highlights: string[]; // Key skills/achievements
+}
+```
+
+### Default Experience Data
+
+<CodeGroup>
+
+```tsx Experiences Array
+const experiences = [
+  {
+    role: "Chief Technology Officer (CTO)",
+    company: "Grupo SADE",
+    period: "Actualidad",
+    description:
+      "Liderando la estrategia tecnológica de una consultora con más de 100 profesionales. Dirección de proyectos de IA Generativa Privada, desarrollo de software, outsourcing y tecnologías diferenciales para clientes de primer nivel.",
+    highlights: ["IA Generativa", "Transformación Digital", "Liderazgo Técnico", "Estrategia IT"],
+  },
+  {
+    role: "Director de Tecnología",
+    company: "SADE Consultoría",
+    period: "Previo",
+    description:
+      "Crecimiento del portfolio de servicios y propuesta de valor, prestando servicio a más de 70 clientes y desarrollando más de 200 proyectos exitosos desde la fundación en 2003.",
+    highlights: ["Consultoría IT", "Desarrollo Software", "Gestión de Equipos", "Relación con Clientes"],
+  },
+  {
+    role: "Consultor & Desarrollador de Software",
+    company: "Trayectoria Profesional",
+    period: "+20 años",
+    description:
+      "Amplia experiencia en desarrollo de software y consultoría, construyendo relaciones directas con clientes y equipos técnicos para entregar soluciones de alto impacto.",
+    highlights: [".NET", "Arquitectura de Software", "Negociación", "Gestión de Proyectos"],
+  },
+];
+```
+
+</CodeGroup>
+
+## Timeline Implementation
+
+### Timeline Structure
+
+```tsx
+<div className="relative">
+  {/* Timeline line */}
+  <div className="absolute left-0 md:left-8 top-0 bottom-0 w-px bg-border" />
+
+  <div className="space-y-12">
+    {experiences.map((exp, i) => (
+      <motion.div key={i} className="relative pl-8 md:pl-20">
+        {/* Timeline dot */}
+        <div className="absolute left-0 md:left-8 top-2 w-2.5 h-2.5 rounded-full bg-primary -translate-x-1" />
+        {/* Card content */}
+      </motion.div>
+    ))}
+  </div>
+</div>
+```
+
+### Timeline Elements
+
+<Tabs>
+  <Tab title="Timeline Line">
+    ```tsx
+    <div className="absolute left-0 md:left-8 top-0 bottom-0 w-px bg-border" />
+    ```
+    Vertical line spanning the full height of the timeline section.
+  </Tab>
+  <Tab title="Timeline Dots">
+    ```tsx
+    <div className="absolute left-0 md:left-8 top-2 w-2.5 h-2.5 rounded-full bg-primary -translate-x-1" />
+    ```
+    Circular dots positioned at each experience entry, centered on the line.
+  </Tab>
+  <Tab title="Responsive Positioning">
+    On mobile: Line and dots at `left-0`
+    On desktop: Line and dots at `left-8` (32px)
+  </Tab>
+</Tabs>
+
+## Experience Card
+
+```tsx
+<motion.div
+  initial={{ opacity: 0, y: 30 }}
+  whileInView={{ opacity: 1, y: 0 }}
+  viewport={{ once: true }}
+  transition={{ delay: i * 0.15, duration: 0.6 }}
+  className="relative pl-8 md:pl-20"
+>
+  {/* Timeline dot */}
+  <div className="absolute left-0 md:left-8 top-2 w-2.5 h-2.5 rounded-full bg-primary -translate-x-1" />
+
+  <div className="bg-card border border-border rounded-lg p-6 md:p-8 hover:border-primary/30 transition-colors">
+    <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
+      <div>
+        <h3 className="font-heading text-xl font-semibold">{exp.role}</h3>
+        <p className="text-primary font-medium">{exp.company}</p>
+      </div>
+      <span className="text-muted-foreground text-sm mt-1 md:mt-0 font-heading">
+        {exp.period}
+      </span>
+    </div>
+    <p className="text-muted-foreground leading-relaxed mb-4">{exp.description}</p>
+    <div className="flex flex-wrap gap-2">
+      {exp.highlights.map((tag) => (
+        <span
+          key={tag}
+          className="text-xs font-medium px-3 py-1 rounded-full bg-primary/10 text-primary border border-primary/20"
+        >
+          {tag}
+        </span>
+      ))}
+    </div>
+  </div>
+</motion.div>
+```
+
+## Card Sections
+
+<Steps>
+  <Step title="Header">
+    Flexbox layout with role/company on left, period on right (stacks on mobile)
+  </Step>
+  <Step title="Description">
+    Muted text with relaxed line height for readability
+  </Step>
+  <Step title="Highlights">
+    Flex-wrapped badge tags with primary color accent
+  </Step>
+</Steps>
+
+## Animation Details
+
+### Staggered Card Animation
+
+Each experience card has an increasing delay:
+
+```tsx
+transition={{ delay: i * 0.15, duration: 0.6 }}
+```
+
+- Experience 0: 0.0s delay
+- Experience 1: 0.15s delay
+- Experience 2: 0.30s delay
+
+This creates a cascading reveal effect as users scroll.
+
+## Highlight Tags
+
+Tags use a consistent badge style:
+
+```tsx
+<span className="text-xs font-medium px-3 py-1 rounded-full 
+                 bg-primary/10 text-primary border border-primary/20">
+  {tag}
+</span>
+```
+
+### Tag Styling Breakdown
+
+- Background: Primary color at 10% opacity
+- Text: Full primary color
+- Border: Primary color at 20% opacity
+- Shape: Fully rounded (`rounded-full`)
+- Padding: `px-3 py-1` for balanced pill shape
+
+## Responsive Behavior
+
+<Tabs>
+  <Tab title="Mobile">
+    - Timeline at left edge
+    - Full-width cards with left padding
+    - Stacked header (role above period)
+    - Smaller card padding (p-6)
+  </Tab>
+  <Tab title="Desktop">
+    - Timeline offset 32px from left
+    - Cards start after timeline with larger gap
+    - Horizontal header layout
+    - Increased card padding (p-8)
+  </Tab>
+</Tabs>
+
+## Section Header
+
+```tsx
+<motion.div
+  initial={{ opacity: 0, y: 30 }}
+  whileInView={{ opacity: 1, y: 0 }}
+  viewport={{ once: true }}
+  transition={{ duration: 0.6 }}
+>
+  <p className="text-primary font-heading text-sm tracking-[0.2em] uppercase mb-3">
+    Trayectoria
+  </p>
+  <h2 className="font-heading text-3xl md:text-5xl font-bold mb-12">
+    Experiencia profesional
+  </h2>
+</motion.div>
+```
+
+## Full Component Code
+
+<CodeGroup>
+
+```tsx ExperienceSection.tsx
+import { motion } from "framer-motion";
+
+const experiences = [
+  {
+    role: "Chief Technology Officer (CTO)",
+    company: "Grupo SADE",
+    period: "Actualidad",
+    description:
+      "Liderando la estrategia tecnológica de una consultora con más de 100 profesionales. Dirección de proyectos de IA Generativa Privada, desarrollo de software, outsourcing y tecnologías diferenciales para clientes de primer nivel.",
+    highlights: ["IA Generativa", "Transformación Digital", "Liderazgo Técnico", "Estrategia IT"],
+  },
+  {
+    role: "Director de Tecnología",
+    company: "SADE Consultoría",
+    period: "Previo",
+    description:
+      "Crecimiento del portfolio de servicios y propuesta de valor, prestando servicio a más de 70 clientes y desarrollando más de 200 proyectos exitosos desde la fundación en 2003.",
+    highlights: ["Consultoría IT", "Desarrollo Software", "Gestión de Equipos", "Relación con Clientes"],
+  },
+  {
+    role: "Consultor & Desarrollador de Software",
+    company: "Trayectoria Profesional",
+    period: "+20 años",
+    description:
+      "Amplia experiencia en desarrollo de software y consultoría, construyendo relaciones directas con clientes y equipos técnicos para entregar soluciones de alto impacto.",
+    highlights: [".NET", "Arquitectura de Software", "Negociación", "Gestión de Proyectos"],
+  },
+];
+
+const ExperienceSection = () => {
+  return (
+    <section id="experience" className="py-24 md:py-32">
+      <div className="container px-6">
+        <div className="max-w-5xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <p className="text-primary font-heading text-sm tracking-[0.2em] uppercase mb-3">
+              Trayectoria
+            </p>
+            <h2 className="font-heading text-3xl md:text-5xl font-bold mb-12">
+              Experiencia profesional
+            </h2>
+          </motion.div>
+
+          <div className="relative">
+            <div className="absolute left-0 md:left-8 top-0 bottom-0 w-px bg-border" />
+
+            <div className="space-y-12">
+              {experiences.map((exp, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.15, duration: 0.6 }}
+                  className="relative pl-8 md:pl-20"
+                >
+                  <div className="absolute left-0 md:left-8 top-2 w-2.5 h-2.5 rounded-full bg-primary -translate-x-1" />
+
+                  <div className="bg-card border border-border rounded-lg p-6 md:p-8 hover:border-primary/30 transition-colors">
+                    <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
+                      <div>
+                        <h3 className="font-heading text-xl font-semibold">{exp.role}</h3>
+                        <p className="text-primary font-medium">{exp.company}</p>
+                      </div>
+                      <span className="text-muted-foreground text-sm mt-1 md:mt-0 font-heading">
+                        {exp.period}
+                      </span>
+                    </div>
+                    <p className="text-muted-foreground leading-relaxed mb-4">{exp.description}</p>
+                    <div className="flex flex-wrap gap-2">
+                      {exp.highlights.map((tag) => (
+                        <span
+                          key={tag}
+                          className="text-xs font-medium px-3 py-1 rounded-full bg-primary/10 text-primary border border-primary/20"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default ExperienceSection;
+```
+
+</CodeGroup>
+
+## Customization
+
+<Steps>
+  <Step title="Add Experience">
+    Add new objects to the experiences array with all required fields
+  </Step>
+  <Step title="Change Timeline Color">
+    Modify `bg-border` for the line and `bg-primary` for dots
+  </Step>
+  <Step title="Adjust Spacing">
+    Change `space-y-12` to increase/decrease gap between entries
+  </Step>
+  <Step title="Customize Tags">
+    Update tag styles or add additional metadata fields
+  </Step>
+</Steps>
+
+## Usage Example
+
+```tsx
+import ExperienceSection from '@/components/ExperienceSection';
+
+function App() {
+  return (
+    <>
+      <SkillsSection />
+      <ExperienceSection />
+      <ContactSection />
+    </>
+  );
+}
+```
+
+## Accessibility
+
+<Tip>
+Consider adding:
+- Semantic time elements for periods
+- ARIA labels for timeline structure
+- Keyboard navigation for card focus states
+</Tip>
+
+```tsx
+<time dateTime="2020-01">{exp.period}</time>
+```
+
+## Related Components
+
+- [SkillsSection](/components/skills-section) - Previous section
+- [ContactSection](/components/contact-section) - Next section
+- [Overview](/components/overview) - Component architecture

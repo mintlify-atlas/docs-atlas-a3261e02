@@ -1,0 +1,447 @@
+---
+title: 'Customizing Styling'
+description: 'Learn how to customize colors, fonts, animations, and visual design of your portfolio'
+icon: 'palette'
+---
+
+This guide shows you how to customize the visual appearance of your portfolio, including colors, fonts, spacing, and animations.
+
+## Understanding the Theme System
+
+The portfolio uses a CSS variable-based theming system with Tailwind CSS. All theme values are defined in:
+
+- `src/index.css` - CSS variables and base styles
+- `tailwind.config.ts` - Tailwind configuration and extensions
+
+## Customizing Colors
+
+All colors use HSL (Hue, Saturation, Lightness) format for easy customization.
+
+### Changing the Primary Color
+
+The primary color (`--primary`) is used for accents, links, and interactive elements.
+
+<Steps>
+  <Step title="Locate Color Variables">
+    Open `src/index.css` and find the `:root` section:
+
+    ```css src/index.css
+    :root {
+      --primary: 207 90% 54%;  /* Current: Blue */
+      --primary-foreground: 220 20% 7%;
+      /* ... */
+    }
+    ```
+  </Step>
+
+  <Step title="Choose Your Color">
+    Use an [HSL color picker](https://hslpicker.com/) to find your desired color.
+
+    <Tip>
+      Keep saturation between 80-95% and lightness between 45-60% for vibrant, accessible colors.
+    </Tip>
+  </Step>
+
+  <Step title="Update the Values">
+    Replace the HSL values:
+
+    <CodeGroup>
+    ```css Blue (Default)
+    --primary: 207 90% 54%;
+    --accent: 207 90% 54%;
+    --ring: 207 90% 54%;
+    ```
+
+    ```css Purple
+    --primary: 270 85% 60%;
+    --accent: 270 85% 60%;
+    --ring: 270 85% 60%;
+    ```
+
+    ```css Green
+    --primary: 142 76% 45%;
+    --accent: 142 76% 45%;
+    --ring: 142 76% 45%;
+    ```
+
+    ```css Orange
+    --primary: 25 95% 53%;
+    --accent: 25 95% 53%;
+    --ring: 25 95% 53%;
+    ```
+    </CodeGroup>
+  </Step>
+</Steps>
+
+### Color System Reference
+
+Here's what each color variable controls:
+
+| Variable | Usage | Line Reference |
+|----------|-------|---------|
+| `--background` | Main page background | src/index.css:9 |
+| `--foreground` | Primary text color | src/index.css:10 |
+| `--card` | Card backgrounds | src/index.css:12 |
+| `--primary` | Accent color, links, buttons | src/index.css:18 |
+| `--muted-foreground` | Secondary text | src/index.css:25 |
+| `--border` | Component borders | src/index.css:33 |
+
+### Updating Background Colors
+
+<Steps>
+  <Step title="Change Main Background">
+    ```css src/index.css
+    --background: 220 20% 7%;  /* Dark blue-gray */
+    ```
+
+    For a pure black background:
+    ```css src/index.css
+    --background: 0 0% 0%;
+    ```
+
+    For a lighter background:
+    ```css src/index.css
+    --background: 220 15% 12%;
+    ```
+  </Step>
+
+  <Step title="Update Hero Gradient">
+    The hero section uses a custom gradient. Update it in `src/index.css:48`:
+
+    ```css src/index.css
+    --hero-gradient: linear-gradient(
+      135deg,
+      hsl(220 20% 7%) 0%,      /* Start color */
+      hsl(220 18% 12%) 50%,     /* Middle color */
+      hsl(207 40% 12%) 100%     /* End color */
+    );
+    ```
+  </Step>
+</Steps>
+
+## Customizing Typography
+
+The portfolio uses two font families defined in `tailwind.config.ts:16-19`.
+
+### Changing Fonts
+
+<Steps>
+  <Step title="Update Font Imports">
+    Edit the Google Fonts import in `src/index.css:1`:
+
+    ```css src/index.css
+    @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap');
+    ```
+
+    <CodeGroup>
+    ```css Default Fonts
+    @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap');
+    ```
+
+    ```css Alternative: Poppins + Open Sans
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Open+Sans:wght@300;400;500;600&display=swap');
+    ```
+
+    ```css Alternative: Montserrat + Roboto
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;600&display=swap');
+    ```
+    </CodeGroup>
+  </Step>
+
+  <Step title="Update Tailwind Config">
+    Update the font families in `tailwind.config.ts:16-19`:
+
+    ```ts tailwind.config.ts
+    fontFamily: {
+      heading: ["Space Grotesk", "sans-serif"],  // Headings (h1-h6)
+      body: ["Inter", "sans-serif"],              // Body text
+    },
+    ```
+
+    If using Poppins + Open Sans:
+    ```ts tailwind.config.ts
+    fontFamily: {
+      heading: ["Poppins", "sans-serif"],
+      body: ["Open Sans", "sans-serif"],
+    },
+    ```
+  </Step>
+</Steps>
+
+<Note>
+  Headings use `font-heading` class and are applied to all h1-h6 elements automatically via `src/index.css:64-66`.
+</Note>
+
+### Adjusting Font Sizes
+
+Font sizes are controlled with Tailwind utility classes in components:
+
+```tsx Example: HeroSection.tsx
+{/* Current sizes */}
+<h1 className="text-5xl md:text-7xl lg:text-8xl">
+
+{/* Smaller sizes */}
+<h1 className="text-4xl md:text-6xl lg:text-7xl">
+
+{/* Larger sizes */}
+<h1 className="text-6xl md:text-8xl lg:text-9xl">
+```
+
+## Modifying Animations
+
+The portfolio uses Framer Motion for animations and custom Tailwind animations.
+
+### Adjusting Animation Speed
+
+Edit animation durations in component files:
+
+<CodeGroup>
+```tsx Default Speed
+<motion.div
+  initial={{ opacity: 0, y: 40 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.8, ease: "easeOut" }}  // 0.8 seconds
+>
+```
+
+```tsx Faster
+<motion.div
+  initial={{ opacity: 0, y: 40 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.4, ease: "easeOut" }}  // 0.4 seconds
+>
+```
+
+```tsx Slower
+<motion.div
+  initial={{ opacity: 0, y: 40 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 1.2, ease: "easeOut" }}  // 1.2 seconds
+>
+```
+</CodeGroup>
+
+### Customizing Floating Animation
+
+The chevron icon in the hero section uses a floating animation defined in `tailwind.config.ts:79-82`:
+
+```ts tailwind.config.ts
+"float": {
+  "0%, 100%": { transform: "translateY(0)" },
+  "50%": { transform: "translateY(-10px)" },  // How far it moves
+},
+```
+
+Adjust the animation:
+
+```ts tailwind.config.ts
+// Smaller movement
+"float": {
+  "0%, 100%": { transform: "translateY(0)" },
+  "50%": { transform: "translateY(-5px)" },
+},
+
+// Larger movement
+"float": {
+  "0%, 100%": { transform: "translateY(0)" },
+  "50%": { transform: "translateY(-15px)" },
+},
+```
+
+Change animation speed in `tailwind.config.ts:87`:
+
+```ts tailwind.config.ts
+"float": "float 6s ease-in-out infinite",  // Default: 6 seconds
+"float": "float 3s ease-in-out infinite",  // Faster: 3 seconds
+"float": "float 9s ease-in-out infinite",  // Slower: 9 seconds
+```
+
+### Removing Animations
+
+To disable animations, remove the motion properties:
+
+<CodeGroup>
+```tsx With Animation
+<motion.div
+  initial={{ opacity: 0, y: 40 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.8 }}
+>
+  Content
+</motion.div>
+```
+
+```tsx Without Animation
+<div>
+  Content
+</div>
+```
+</CodeGroup>
+
+## Adjusting Spacing and Layout
+
+### Section Padding
+
+All sections use consistent vertical padding:
+
+```tsx Example: AboutSection.tsx
+<section className="py-24 md:py-32">  {/* 96px mobile, 128px desktop */}
+```
+
+Adjust spacing:
+
+```tsx
+{/* Less padding */}
+<section className="py-16 md:py-24">  {/* 64px mobile, 96px desktop */}
+
+{/* More padding */}
+<section className="py-32 md:py-40">  {/* 128px mobile, 160px desktop */}
+```
+
+### Container Width
+
+Maximum content width is controlled by container classes:
+
+```tsx
+<div className="max-w-5xl mx-auto">  {/* 1024px max */}
+<div className="max-w-4xl mx-auto">  {/* 896px max */}
+<div className="max-w-3xl mx-auto">  {/* 768px max */}
+```
+
+### Border Radius
+
+Global border radius is defined in `tailwind.config.ts:65-69` and `src/index.css:37`:
+
+```css src/index.css
+--radius: 0.75rem;  /* 12px - default */
+```
+
+For rounder corners:
+```css
+--radius: 1rem;  /* 16px */
+```
+
+For sharper corners:
+```css
+--radius: 0.5rem;  /* 8px */
+```
+
+## Customizing Visual Effects
+
+### Glow Effects
+
+Update glow intensity in `src/index.css:49-50`:
+
+```css src/index.css
+--glow-primary: 0 0 60px hsl(207 90% 54% / 0.15);   /* Subtle glow */
+--glow-strong: 0 0 120px hsl(207 90% 54% / 0.25);   /* Strong glow */
+```
+
+<CodeGroup>
+```css Subtle Glow
+--glow-primary: 0 0 40px hsl(207 90% 54% / 0.1);
+--glow-strong: 0 0 80px hsl(207 90% 54% / 0.15);
+```
+
+```css Intense Glow
+--glow-primary: 0 0 80px hsl(207 90% 54% / 0.25);
+--glow-strong: 0 0 160px hsl(207 90% 54% / 0.35);
+```
+
+```css No Glow
+--glow-primary: 0 0 0 transparent;
+--glow-strong: 0 0 0 transparent;
+```
+</CodeGroup>
+
+### Grid Background Pattern
+
+The hero section includes a grid pattern background (src/components/HeroSection.tsx:8-11):
+
+```tsx src/components/HeroSection.tsx
+<div className="absolute inset-0 opacity-[0.04]" style={{
+  backgroundImage: `linear-gradient(hsl(207 90% 54%) 1px, transparent 1px), linear-gradient(90deg, hsl(207 90% 54%) 1px, transparent 1px)`,
+  backgroundSize: "60px 60px"  // Grid cell size
+}} />
+```
+
+Customize the grid:
+
+```tsx
+{/* Smaller grid */}
+backgroundSize: "40px 40px"
+
+{/* Larger grid */}
+backgroundSize: "80px 80px"
+
+{/* More visible */}
+opacity-[0.08]
+
+{/* Less visible */}
+opacity-[0.02]
+```
+
+### Text Gradient
+
+The gradient used on your name is defined in `src/index.css:70-73`:
+
+```css src/index.css
+.text-gradient {
+  @apply bg-clip-text text-transparent;
+  background-image: linear-gradient(135deg, hsl(207 90% 54%), hsl(207 80% 70%));
+}
+```
+
+Customize the gradient:
+
+```css
+{/* Purple gradient */}
+background-image: linear-gradient(135deg, hsl(270 85% 60%), hsl(270 75% 75%));
+
+{/* Multi-color gradient */}
+background-image: linear-gradient(135deg, hsl(207 90% 54%), hsl(270 85% 60%), hsl(340 85% 60%));
+
+{/* Vertical gradient */}
+background-image: linear-gradient(180deg, hsl(207 90% 54%), hsl(207 80% 70%));
+```
+
+## Dark Mode Support
+
+The portfolio is built with a dark theme by default. To create a light mode:
+
+<Warning>
+  Adding light mode requires significant CSS changes. Consider carefully whether you need this feature.
+</Warning>
+
+<Steps>
+  <Step title="Add Light Mode Variables">
+    Add a `.light` class section in `src/index.css` after the `:root` section:
+
+    ```css src/index.css
+    .light {
+      --background: 0 0% 100%;
+      --foreground: 222.2 84% 4.9%;
+      --card: 0 0% 100%;
+      --card-foreground: 222.2 84% 4.9%;
+      --primary: 207 90% 54%;
+      --primary-foreground: 0 0% 100%;
+      /* ... add all other variables */
+    }
+    ```
+  </Step>
+
+  <Step title="Add Theme Toggle Component">
+    Create a theme switcher component to toggle between dark and light modes.
+  </Step>
+</Steps>
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Content Customization" icon="pen-to-square" href="/customization/content">
+    Update text, skills, and personal information
+  </Card>
+  <Card title="Adding Sections" icon="plus" href="/customization/adding-sections">
+    Create new sections for your portfolio
+  </Card>
+</CardGroup>

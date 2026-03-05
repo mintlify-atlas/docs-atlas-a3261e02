@@ -1,0 +1,214 @@
+---
+title: 'HeroSection'
+description: 'Full-screen landing component with animated introduction and gradient effects'
+---
+
+## Overview
+
+The `HeroSection` component is the first visual element users encounter. It features a full-screen layout with animated text reveals, gradient background effects, and a scroll indicator.
+
+## Features
+
+- Full viewport height with centered content
+- Animated grid pattern background
+- Gradient blur effect overlay
+- Staggered text animations on mount
+- Scroll down indicator with floating animation
+- Responsive typography scaling
+
+## Implementation
+
+### Component Structure
+
+The component is located at `src/components/HeroSection.tsx` and has no props - it's a self-contained presentation component.
+
+```tsx
+import { motion } from "framer-motion";
+import { ChevronDown } from "lucide-react";
+
+const HeroSection = () => {
+  return (
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden" 
+      style={{ background: "var(--hero-gradient)" }}>
+      {/* Background effects */}
+      {/* Content */}
+      {/* Scroll indicator */}
+    </section>
+  );
+};
+```
+
+### Background Effects
+
+<Tabs>
+  <Tab title="Grid Pattern">
+    ```tsx
+    <div className="absolute inset-0 opacity-[0.04]" style={{
+      backgroundImage: `linear-gradient(hsl(207 90% 54%) 1px, transparent 1px), 
+                       linear-gradient(90deg, hsl(207 90% 54%) 1px, transparent 1px)`,
+      backgroundSize: "60px 60px"
+    }} />
+    ```
+    Creates a subtle grid overlay using CSS gradients with 60px spacing.
+  </Tab>
+  <Tab title="Blur Effect">
+    ```tsx
+    <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 
+                    w-[600px] h-[600px] rounded-full opacity-20 blur-[120px]" 
+         style={{ background: "hsl(207 90% 54%)" }} />
+    ```
+    Adds a large blurred circle for atmospheric lighting effect.
+  </Tab>
+</Tabs>
+
+## Animation Timeline
+
+The component uses sequential animations with increasing delays:
+
+| Element | Initial State | Animation | Delay | Duration |
+|---------|--------------|-----------|-------|----------|
+| Container | `opacity: 0, y: 40` | Fade in, slide up | 0s | 0.8s |
+| Role Label | `opacity: 0, y: 20` | Fade in, slide up | 0.2s | 0.6s |
+| Name Heading | `opacity: 0, y: 20` | Fade in, slide up | 0.4s | 0.6s |
+| Description | `opacity: 0, y: 20` | Fade in, slide up | 0.6s | 0.6s |
+| Location | `opacity: 0` | Fade in | 0.8s | 0.6s |
+| Scroll Icon | `opacity: 0` | Fade in | 1.2s | 0.6s |
+
+## Content Structure
+
+### Text Hierarchy
+
+```tsx
+<motion.div className="max-w-4xl mx-auto text-center">
+  {/* Role - Small uppercase label */}
+  <motion.p className="text-primary font-heading text-sm tracking-[0.3em] uppercase mb-6">
+    Chief Technology Officer
+  </motion.p>
+
+  {/* Name - Large hero heading with gradient */}
+  <motion.h1 className="font-heading text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight mb-6">
+    David <span className="text-gradient">Carrascosa</span>
+  </motion.h1>
+
+  {/* Description - Body text */}
+  <motion.p className="text-muted-foreground text-lg md:text-xl max-w-2xl mx-auto leading-relaxed mb-4">
+    +20 años liderando tecnología, consultoría y desarrollo de software.
+    Actualmente impulsando la transformación digital desde{" "}
+    <span className="text-primary font-medium">Grupo SADE</span>.
+  </motion.p>
+
+  {/* Location - Subtle label */}
+  <motion.p className="text-muted-foreground/60 text-sm tracking-wide">
+    Madrid, España
+  </motion.p>
+</motion.div>
+```
+
+## Scroll Indicator
+
+The scroll indicator uses a custom floating animation defined in CSS:
+
+```tsx
+<motion.div
+  initial={{ opacity: 0 }}
+  animate={{ opacity: 1 }}
+  transition={{ delay: 1.2, duration: 0.6 }}
+  className="absolute bottom-10 left-1/2 -translate-x-1/2"
+>
+  <a href="#about" 
+     className="text-muted-foreground/40 hover:text-primary transition-colors">
+    <ChevronDown className="w-6 h-6 animate-float" />
+  </a>
+</motion.div>
+```
+
+<Note>
+The `animate-float` class should be defined in your CSS to create a gentle up-down motion.
+</Note>
+
+## Styling Details
+
+### Responsive Typography
+
+The heading uses breakpoint-based font scaling:
+
+- Mobile: `text-5xl` (48px)
+- Medium: `md:text-7xl` (72px)
+- Large: `lg:text-8xl` (96px)
+
+### Custom CSS Properties
+
+```css
+/* Define in your global CSS */
+:root {
+  --hero-gradient: linear-gradient(135deg, 
+    hsl(220 20% 10%) 0%, 
+    hsl(220 25% 8%) 100%);
+}
+
+.text-gradient {
+  background: linear-gradient(135deg, 
+    hsl(207 90% 54%), 
+    hsl(207 90% 64%));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+```
+
+## Usage Example
+
+```tsx
+import HeroSection from '@/components/HeroSection';
+
+function App() {
+  return (
+    <>
+      <HeroSection />
+      {/* Other sections */}
+    </>
+  );
+}
+```
+
+## Accessibility Considerations
+
+<Warning>
+Consider adding:
+- Skip link to main content for keyboard users
+- Reduced motion preferences check
+- Appropriate heading hierarchy
+</Warning>
+
+```tsx
+// Example: Respect reduced motion preference
+const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+const animationConfig = prefersReducedMotion 
+  ? { initial: {}, animate: {} } 
+  : { initial: { opacity: 0, y: 40 }, animate: { opacity: 1, y: 0 } };
+```
+
+## Customization
+
+To customize the HeroSection:
+
+<Steps>
+  <Step title="Update Content">
+    Modify the hardcoded text strings for role, name, description, and location.
+  </Step>
+  <Step title="Adjust Colors">
+    Change the `--hero-gradient` CSS variable and primary color HSL values.
+  </Step>
+  <Step title="Modify Animation Timing">
+    Adjust the `delay` and `duration` values in the motion components.
+  </Step>
+  <Step title="Change Typography">
+    Update the responsive text size classes (`text-5xl`, `md:text-7xl`, etc.).
+  </Step>
+</Steps>
+
+## Related Components
+
+- [AboutSection](/components/about-section) - Next section in the page flow
+- [Navbar](/components/navbar) - Links to #about anchor

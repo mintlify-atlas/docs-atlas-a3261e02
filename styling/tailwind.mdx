@@ -1,0 +1,318 @@
+---
+title: "Tailwind CSS Setup"
+description: "Complete guide to the Tailwind CSS configuration and utility classes"
+---
+
+## Overview
+
+This portfolio uses Tailwind CSS v3 as the primary styling framework, configured with custom theme extensions, design tokens, and the `tailwindcss-animate` plugin for smooth animations.
+
+## Configuration
+
+The Tailwind configuration is defined in `tailwind.config.ts`:
+
+```typescript tailwind.config.ts
+import type { Config } from "tailwindcss";
+
+export default {
+  darkMode: ["class"],
+  content: [
+    "./pages/**/*.{ts,tsx}",
+    "./components/**/*.{ts,tsx}",
+    "./app/**/*.{ts,tsx}",
+    "./src/**/*.{ts,tsx}"
+  ],
+  prefix: "",
+  theme: {
+    container: {
+      center: true,
+      padding: "2rem",
+      screens: {
+        "2xl": "1400px",
+      },
+    },
+    extend: {
+      // Custom extensions...
+    },
+  },
+  plugins: [require("tailwindcss-animate")],
+} satisfies Config;
+```
+
+### Content Paths
+
+Tailwind scans these paths for class usage:
+- `./pages/**/*.{ts,tsx}` - Next.js pages
+- `./components/**/*.{ts,tsx}` - Component library
+- `./app/**/*.{ts,tsx}` - App directory
+- `./src/**/*.{ts,tsx}` - Source files
+
+## Custom Theme Extensions
+
+### Font Families
+
+Two custom font families are configured:
+
+```typescript
+fontFamily: {
+  heading: ["Space Grotesk", "sans-serif"],
+  body: ["Inter", "sans-serif"],
+}
+```
+
+<Tabs>
+  <Tab title="Usage">
+    ```tsx
+    <h1 className="font-heading">David Carrascosa</h1>
+    <p className="font-body">Portfolio description...</p>
+    ```
+  </Tab>
+  <Tab title="Output">
+    - **font-heading**: Space Grotesk for all headings
+    - **font-body**: Inter for body text and paragraphs
+  </Tab>
+</Tabs>
+
+### Color System
+
+The color palette uses CSS variables for theming flexibility:
+
+```typescript
+colors: {
+  border: "hsl(var(--border))",
+  input: "hsl(var(--input))",
+  ring: "hsl(var(--ring))",
+  background: "hsl(var(--background))",
+  foreground: "hsl(var(--foreground))",
+  primary: {
+    DEFAULT: "hsl(var(--primary))",
+    foreground: "hsl(var(--primary-foreground))",
+  },
+  secondary: {
+    DEFAULT: "hsl(var(--secondary))",
+    foreground: "hsl(var(--secondary-foreground))",
+  },
+  // ... more colors
+}
+```
+
+<Note>
+All colors use HSL format with CSS variables, enabling easy theme switching and customization.
+</Note>
+
+#### Core Colors
+
+| Class | Purpose | Example |
+|-------|---------|--------|
+| `bg-background` | Main background color | Page backgrounds |
+| `text-foreground` | Primary text color | Body text |
+| `bg-primary` | Primary brand color | Buttons, links |
+| `bg-secondary` | Secondary elements | Alternative buttons |
+| `bg-muted` | Muted backgrounds | Cards, sections |
+| `bg-accent` | Accent highlights | Special elements |
+
+#### Semantic Colors
+
+```tsx
+// Primary action button
+<button className="bg-primary text-primary-foreground">
+  Contact Me
+</button>
+
+// Muted text for subtitles
+<p className="text-muted-foreground">
+  +20 años liderando tecnología...
+</p>
+
+// Card with proper contrast
+<div className="bg-card text-card-foreground">
+  Card content
+</div>
+```
+
+### Border Radius
+
+Custom border radius scales using CSS variables:
+
+```typescript
+borderRadius: {
+  lg: "var(--radius)",
+  md: "calc(var(--radius) - 2px)",
+  sm: "calc(var(--radius) - 4px)",
+}
+```
+
+<Tip>
+The base `--radius` value is `0.75rem` (12px), providing consistent rounded corners throughout the UI.
+</Tip>
+
+## Animations
+
+### Custom Keyframes
+
+Three custom animations are defined:
+
+<CodeGroup>
+```typescript Accordion Down
+"accordion-down": {
+  from: { height: "0" },
+  to: { height: "var(--radix-accordion-content-height)" },
+}
+```
+
+```typescript Accordion Up
+"accordion-up": {
+  from: { height: "var(--radix-accordion-content-height)" },
+  to: { height: "0" },
+}
+```
+
+```typescript Float
+"float": {
+  "0%, 100%": { transform: "translateY(0)" },
+  "50%": { transform: "translateY(-10px)" },
+}
+```
+</CodeGroup>
+
+### Animation Classes
+
+```typescript
+animation: {
+  "accordion-down": "accordion-down 0.2s ease-out",
+  "accordion-up": "accordion-up 0.2s ease-out",
+  "float": "float 6s ease-in-out infinite",
+}
+```
+
+**Real-world usage:**
+
+```tsx HeroSection.tsx
+<ChevronDown className="w-6 h-6 animate-float" />
+```
+
+## Container Utility
+
+Custom container configuration for responsive layouts:
+
+```typescript
+container: {
+  center: true,
+  padding: "2rem",
+  screens: {
+    "2xl": "1400px",
+  },
+}
+```
+
+<Tabs>
+  <Tab title="Features">
+    - **Centered**: Automatically centers content
+    - **Padding**: 2rem horizontal padding
+    - **Max Width**: Caps at 1400px on 2xl screens
+  </Tab>
+  <Tab title="Usage">
+    ```tsx
+    <div className="container">
+      {/* Content is centered with padding */}
+    </div>
+    ```
+  </Tab>
+</Tabs>
+
+## Plugins
+
+### tailwindcss-animate
+
+Provides utility classes for animations and transitions:
+
+```typescript
+plugins: [require("tailwindcss-animate")]
+```
+
+**Capabilities:**
+- Smooth enter/exit animations
+- Fade, slide, and scale transitions
+- Accordion animations
+- Custom keyframe support
+
+<Note>
+This plugin integrates seamlessly with Framer Motion for complex animations.
+</Note>
+
+## PostCSS Configuration
+
+The PostCSS setup is minimal and focused:
+
+```javascript postcss.config.js
+export default {
+  plugins: {
+    tailwindcss: {},
+    autoprefixer: {},
+  },
+};
+```
+
+- **tailwindcss**: Processes Tailwind directives
+- **autoprefixer**: Adds vendor prefixes for browser compatibility
+
+## Utility Class Examples
+
+### Spacing
+
+```tsx
+<div className="px-6">           {/* Horizontal padding */}
+<div className="mb-6">           {/* Bottom margin */}
+<div className="gap-8">          {/* Gap in flex/grid */}
+```
+
+### Typography
+
+```tsx
+<h1 className="text-5xl md:text-7xl lg:text-8xl font-bold">
+  Responsive Heading
+</h1>
+
+<p className="text-lg md:text-xl leading-relaxed">
+  Responsive paragraph
+</p>
+```
+
+### Layout
+
+```tsx
+<section className="relative min-h-screen flex items-center justify-center">
+  <div className="absolute inset-0 opacity-[0.04]" />
+  <div className="container relative z-10 px-6">
+    {/* Content */}
+  </div>
+</section>
+```
+
+### Transitions
+
+```tsx
+<button className="transition-colors hover:text-primary">
+  Hover me
+</button>
+
+<nav className="transition-all duration-300">
+  Smooth transitions
+</nav>
+```
+
+## Best Practices
+
+<Tip>
+**Mobile-First Approach**: Start with mobile styles and add responsive modifiers (`md:`, `lg:`) for larger screens.
+</Tip>
+
+1. **Use Semantic Color Names**: Prefer `bg-primary` over hardcoded HSL values
+2. **Leverage CSS Variables**: Colors and radius values use CSS variables for theme flexibility
+3. **Combine with Framer Motion**: Use Tailwind for static styles, Framer Motion for complex animations
+4. **Consistent Spacing**: Use Tailwind's spacing scale (4, 6, 8, 10, etc.)
+
+## Related Documentation
+
+- [Theming](/styling/theming) - CSS variables and design tokens
+- [Responsive Design](/styling/responsive-design) - Breakpoints and mobile-first patterns

@@ -1,0 +1,282 @@
+---
+title: 'AboutSection'
+description: 'Professional background component with statistics cards and descriptive content'
+---
+
+## Overview
+
+The `AboutSection` component presents professional background information alongside key statistics. It features a two-column layout with text content and animated stat cards.
+
+## Features
+
+- Responsive two-column grid layout
+- Animated statistics cards with icons
+- Scroll-triggered animations
+- Icon integration with Lucide React
+- Structured biographical content
+- Border glow effects on hover
+
+## Component Structure
+
+```tsx
+import { motion } from "framer-motion";
+import { Briefcase, Users, Lightbulb } from "lucide-react";
+
+const stats = [
+  { icon: Briefcase, value: "+20", label: "Años de experiencia" },
+  { icon: Users, value: "+70", label: "Clientes atendidos" },
+  { icon: Lightbulb, value: "+200", label: "Proyectos exitosos" },
+];
+
+const AboutSection = () => {
+  return (
+    <section id="about" className="py-24 md:py-32">
+      {/* Content */}
+    </section>
+  );
+};
+```
+
+## Data Structure
+
+The statistics are defined as an array of objects:
+
+```typescript
+interface Stat {
+  icon: LucideIcon;  // Icon component from lucide-react
+  value: string;     // Display value (e.g., "+20")
+  label: string;     // Description label
+}
+```
+
+## Layout Implementation
+
+### Grid Structure
+
+<Tabs>
+  <Tab title="Desktop Layout">
+    ```tsx
+    <div className="grid md:grid-cols-5 gap-12 mb-16">
+      <div className="md:col-span-3 space-y-5">
+        {/* Text content - 60% width */}
+      </div>
+      <div className="md:col-span-2 space-y-4">
+        {/* Stat cards - 40% width */}
+      </div>
+    </div>
+    ```
+  </Tab>
+  <Tab title="Mobile Layout">
+    On mobile, the grid collapses to a single column with text content appearing first, followed by statistics cards below.
+  </Tab>
+</Tabs>
+
+## Statistics Cards
+
+Each stat card features an icon, value, and label:
+
+```tsx
+{stats.map((stat, i) => (
+  <motion.div
+    key={stat.label}
+    initial={{ opacity: 0, x: 20 }}
+    whileInView={{ opacity: 1, x: 0 }}
+    viewport={{ once: true }}
+    transition={{ delay: 0.3 + i * 0.1, duration: 0.5 }}
+    className="bg-card border border-border rounded-lg p-5 flex items-center gap-4 border-glow"
+  >
+    <div className="w-10 h-10 rounded-md bg-primary/10 flex items-center justify-center flex-shrink-0">
+      <stat.icon className="w-5 h-5 text-primary" />
+    </div>
+    <div>
+      <p className="font-heading text-2xl font-bold">{stat.value}</p>
+      <p className="text-muted-foreground text-sm">{stat.label}</p>
+    </div>
+  </motion.div>
+))}
+```
+
+### Card Animation Pattern
+
+Cards slide in from the right with staggered delays:
+
+- Card 1: 0.3s delay
+- Card 2: 0.4s delay (0.3 + 0.1)
+- Card 3: 0.5s delay (0.3 + 0.2)
+
+## Content Typography
+
+The text content uses a hierarchy of emphasis:
+
+<CodeGroup>
+
+```tsx Primary Paragraph
+<p className="text-secondary-foreground leading-relaxed text-lg">
+  Más de dos décadas de experiencia en consultoría y desarrollo de software me han 
+  enseñado que la mejor tecnología es la que resuelve problemas reales de negocio.
+</p>
+```
+
+```tsx Secondary Paragraphs
+<p className="text-muted-foreground leading-relaxed">
+  Como CTO de <span className="text-foreground font-medium">Grupo SADE</span>, 
+  lidero un equipo de más de 100 consultores e ingenieros de software...
+</p>
+```
+
+</CodeGroup>
+
+## Section Header
+
+Standard section header pattern used across components:
+
+```tsx
+<motion.div
+  initial={{ opacity: 0, y: 30 }}
+  whileInView={{ opacity: 1, y: 0 }}
+  viewport={{ once: true }}
+  transition={{ duration: 0.6 }}
+>
+  <p className="text-primary font-heading text-sm tracking-[0.2em] uppercase mb-3">
+    Sobre mí
+  </p>
+  <h2 className="font-heading text-3xl md:text-5xl font-bold mb-8">
+    Tecnología con visión de negocio
+  </h2>
+</motion.div>
+```
+
+## Styling Features
+
+### Border Glow Effect
+
+The `border-glow` class creates a subtle hover effect on stat cards:
+
+```css
+/* Add to your global CSS */
+.border-glow {
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.border-glow:hover {
+  border-color: hsl(207 90% 54% / 0.3);
+  box-shadow: 0 0 20px hsl(207 90% 54% / 0.1);
+}
+```
+
+### Spacing System
+
+- Section padding: `py-24 md:py-32`
+- Content container: `container px-6`
+- Max width: `max-w-5xl mx-auto`
+- Column gap: `gap-12`
+- Card gap: `space-y-4`
+- Text gap: `space-y-5`
+
+## Full Component Code
+
+<CodeGroup>
+
+```tsx AboutSection.tsx
+import { motion } from "framer-motion";
+import { Briefcase, Users, Lightbulb } from "lucide-react";
+
+const stats = [
+  { icon: Briefcase, value: "+20", label: "Años de experiencia" },
+  { icon: Users, value: "+70", label: "Clientes atendidos" },
+  { icon: Lightbulb, value: "+200", label: "Proyectos exitosos" },
+];
+
+const AboutSection = () => {
+  return (
+    <section id="about" className="py-24 md:py-32">
+      <div className="container px-6">
+        <div className="max-w-5xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <p className="text-primary font-heading text-sm tracking-[0.2em] uppercase mb-3">
+              Sobre mí
+            </p>
+            <h2 className="font-heading text-3xl md:text-5xl font-bold mb-8">
+              Tecnología con visión de negocio
+            </h2>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2, duration: 0.6 }}
+            className="grid md:grid-cols-5 gap-12 mb-16"
+          >
+            <div className="md:col-span-3 space-y-5">
+              {/* Text content */}
+            </div>
+
+            <div className="md:col-span-2 space-y-4">
+              {stats.map((stat, i) => (
+                <motion.div key={stat.label} /* ... */>
+                  {/* Stat card */}
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default AboutSection;
+```
+
+</CodeGroup>
+
+## Customization Guide
+
+<Steps>
+  <Step title="Update Statistics">
+    Modify the `stats` array with your own values, labels, and icons from Lucide React.
+  </Step>
+  <Step title="Change Content">
+    Replace the paragraph text with your own professional background.
+  </Step>
+  <Step title="Adjust Layout">
+    Change `md:col-span-3` and `md:col-span-2` to adjust the text/stats ratio.
+  </Step>
+  <Step title="Modify Icons">
+    Import different icons from `lucide-react` and update the stats array.
+  </Step>
+</Steps>
+
+## Usage Example
+
+```tsx
+import AboutSection from '@/components/AboutSection';
+
+function App() {
+  return (
+    <>
+      <HeroSection />
+      <AboutSection />
+      <SkillsSection />
+    </>
+  );
+}
+```
+
+## Accessibility
+
+<Tip>
+The component uses semantic HTML with a proper heading hierarchy (h2) and maintains good color contrast ratios for text content.
+</Tip>
+
+## Related Components
+
+- [HeroSection](/components/hero-section) - Previous section
+- [SkillsSection](/components/skills-section) - Next section
+- [Overview](/components/overview) - Component architecture

@@ -1,0 +1,372 @@
+---
+title: 'ContactSection'
+description: 'Contact call-to-action with social links and footer information'
+---
+
+## Overview
+
+The `ContactSection` component serves as the final section of the portfolio, providing contact information, social links, and footer details. It features centered content with call-to-action buttons and copyright information.
+
+## Features
+
+- Centered call-to-action layout
+- Social media and contact links
+- Icon integration from Lucide React
+- Responsive button layout
+- Footer with divider
+- Copyright and tagline
+- External link handling
+
+## Component Structure
+
+```tsx
+import { motion } from "framer-motion";
+import { Linkedin, Globe, Mail } from "lucide-react";
+
+const ContactSection = () => {
+  return (
+    <section id="contact" className="py-24 md:py-32">
+      <div className="container px-6">
+        <div className="max-w-3xl mx-auto text-center">
+          {/* Header and CTA buttons */}
+        </div>
+      </div>
+
+      {/* Footer */}
+      <div className="container px-6 mt-24">
+        {/* Footer content */}
+      </div>
+    </section>
+  );
+};
+```
+
+## Section Header
+
+```tsx
+<motion.div
+  initial={{ opacity: 0, y: 30 }}
+  whileInView={{ opacity: 1, y: 0 }}
+  viewport={{ once: true }}
+  transition={{ duration: 0.6 }}
+>
+  <p className="text-primary font-heading text-sm tracking-[0.2em] uppercase mb-3">
+    Contacto
+  </p>
+  <h2 className="font-heading text-3xl md:text-5xl font-bold mb-6">
+    Hablemos
+  </h2>
+  <p className="text-muted-foreground text-lg leading-relaxed mb-12">
+    ¿Buscas un partner tecnológico que entienda tu negocio? 
+    Conectemos y exploremos cómo la tecnología puede impulsar tu empresa.
+  </p>
+</motion.div>
+```
+
+## Contact Links
+
+Three primary contact methods are provided:
+
+<Tabs>
+  <Tab title="LinkedIn">
+    ```tsx
+    <a
+      href="https://www.linkedin.com/in/carrascosa"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="inline-flex items-center gap-3 px-6 py-3 rounded-lg 
+                 bg-primary text-primary-foreground font-heading font-medium 
+                 hover:opacity-90 transition-opacity"
+    >
+      <Linkedin className="w-5 h-5" />
+      LinkedIn
+    </a>
+    ```
+    Primary CTA with filled background
+  </Tab>
+  <Tab title="Website">
+    ```tsx
+    <a
+      href="https://www.grupo-sade.com"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="inline-flex items-center gap-3 px-6 py-3 rounded-lg 
+                 border border-border text-foreground font-heading font-medium 
+                 hover:border-primary/50 transition-colors"
+    >
+      <Globe className="w-5 h-5" />
+      Grupo SADE
+    </a>
+    ```
+    Secondary button with border
+  </Tab>
+  <Tab title="Email">
+    ```tsx
+    <a
+      href="mailto:contacto@grupo-sade.com"
+      className="inline-flex items-center gap-3 px-6 py-3 rounded-lg 
+                 border border-border text-foreground font-heading font-medium 
+                 hover:border-primary/50 transition-colors"
+    >
+      <Mail className="w-5 h-5" />
+      Email
+    </a>
+    ```
+    Tertiary email button
+  </Tab>
+</Tabs>
+
+## Button Variants
+
+### Primary Button (LinkedIn)
+
+```tsx
+className="inline-flex items-center gap-3 px-6 py-3 rounded-lg 
+          bg-primary text-primary-foreground font-heading font-medium 
+          hover:opacity-90 transition-opacity"
+```
+
+- Filled background with primary color
+- White text on colored background
+- Opacity hover effect (90%)
+
+### Secondary Buttons (Website, Email)
+
+```tsx
+className="inline-flex items-center gap-3 px-6 py-3 rounded-lg 
+          border border-border text-foreground font-heading font-medium 
+          hover:border-primary/50 transition-colors"
+```
+
+- Outline style with border
+- Default text color
+- Border color transition on hover
+
+## Button Layout
+
+```tsx
+<motion.div
+  initial={{ opacity: 0, y: 20 }}
+  whileInView={{ opacity: 1, y: 0 }}
+  viewport={{ once: true }}
+  transition={{ delay: 0.2, duration: 0.6 }}
+  className="flex flex-col sm:flex-row items-center justify-center gap-4"
+>
+  {/* Buttons */}
+</motion.div>
+```
+
+<Tabs>
+  <Tab title="Mobile">
+    Vertical stack - `flex-col`
+  </Tab>
+  <Tab title="Desktop">
+    Horizontal row - `sm:flex-row`
+  </Tab>
+</Tabs>
+
+## Footer Section
+
+```tsx
+<div className="container px-6 mt-24">
+  <div className="section-divider mb-8" />
+  <div className="flex flex-col md:flex-row items-center justify-between 
+                  text-muted-foreground/50 text-sm">
+    <p className="font-heading">© 2026 David Carrascosa Bolaños</p>
+    <p>CTO · Grupo SADE · Beyond Technology</p>
+  </div>
+</div>
+```
+
+### Footer Elements
+
+<Steps>
+  <Step title="Divider">
+    The `section-divider` class creates a horizontal line separator
+  </Step>
+  <Step title="Copyright">
+    Left-aligned on desktop, centered on mobile
+  </Step>
+  <Step title="Tagline">
+    Right-aligned on desktop, below copyright on mobile
+  </Step>
+</Steps>
+
+### Divider Styling
+
+Add this to your global CSS:
+
+```css
+.section-divider {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, 
+    transparent, 
+    hsl(var(--border)) 50%, 
+    transparent);
+}
+```
+
+## External Link Security
+
+All external links include security attributes:
+
+```tsx
+target="_blank"           // Opens in new tab
+rel="noopener noreferrer" // Security best practice
+```
+
+<Warning>
+Always use `rel="noopener noreferrer"` with `target="_blank"` to prevent security vulnerabilities and performance issues.
+</Warning>
+
+## Animation Details
+
+| Element | Delay | Duration | Effect |
+|---------|-------|----------|--------|
+| Header | 0s | 0.6s | Fade in, slide up |
+| Buttons | 0.2s | 0.6s | Fade in, slide up |
+
+## Full Component Code
+
+<CodeGroup>
+
+```tsx ContactSection.tsx
+import { motion } from "framer-motion";
+import { Linkedin, Globe, Mail } from "lucide-react";
+
+const ContactSection = () => {
+  return (
+    <section id="contact" className="py-24 md:py-32">
+      <div className="container px-6">
+        <div className="max-w-3xl mx-auto text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <p className="text-primary font-heading text-sm tracking-[0.2em] uppercase mb-3">
+              Contacto
+            </p>
+            <h2 className="font-heading text-3xl md:text-5xl font-bold mb-6">
+              Hablemos
+            </h2>
+            <p className="text-muted-foreground text-lg leading-relaxed mb-12">
+              ¿Buscas un partner tecnológico que entienda tu negocio? 
+              Conectemos y exploremos cómo la tecnología puede impulsar tu empresa.
+            </p>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2, duration: 0.6 }}
+            className="flex flex-col sm:flex-row items-center justify-center gap-4"
+          >
+            <a
+              href="https://www.linkedin.com/in/carrascosa"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-3 px-6 py-3 rounded-lg bg-primary text-primary-foreground font-heading font-medium hover:opacity-90 transition-opacity"
+            >
+              <Linkedin className="w-5 h-5" />
+              LinkedIn
+            </a>
+            <a
+              href="https://www.grupo-sade.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-3 px-6 py-3 rounded-lg border border-border text-foreground font-heading font-medium hover:border-primary/50 transition-colors"
+            >
+              <Globe className="w-5 h-5" />
+              Grupo SADE
+            </a>
+            <a
+              href="mailto:contacto@grupo-sade.com"
+              className="inline-flex items-center gap-3 px-6 py-3 rounded-lg border border-border text-foreground font-heading font-medium hover:border-primary/50 transition-colors"
+            >
+              <Mail className="w-5 h-5" />
+              Email
+            </a>
+          </motion.div>
+        </div>
+      </div>
+
+      {/* Footer */}
+      <div className="container px-6 mt-24">
+        <div className="section-divider mb-8" />
+        <div className="flex flex-col md:flex-row items-center justify-between text-muted-foreground/50 text-sm">
+          <p className="font-heading">© 2026 David Carrascosa Bolaños</p>
+          <p>CTO · Grupo SADE · Beyond Technology</p>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default ContactSection;
+```
+
+</CodeGroup>
+
+## Customization
+
+<Steps>
+  <Step title="Update Links">
+    Replace LinkedIn, website, and email URLs with your own
+  </Step>
+  <Step title="Add Social Links">
+    Import additional icons (Twitter, GitHub) and add more buttons
+  </Step>
+  <Step title="Change Button Styles">
+    Modify primary/secondary button classes for different visual hierarchy
+  </Step>
+  <Step title="Update Footer">
+    Replace copyright and tagline text with your information
+  </Step>
+</Steps>
+
+## Adding More Contact Options
+
+```tsx
+import { Github, Twitter } from "lucide-react";
+
+// Add to button container
+<a href="https://github.com/username" /* ... */>
+  <Github className="w-5 h-5" />
+  GitHub
+</a>
+```
+
+## Usage Example
+
+```tsx
+import ContactSection from '@/components/ContactSection';
+
+function App() {
+  return (
+    <>
+      <ExperienceSection />
+      <ContactSection />
+    </>
+  );
+}
+```
+
+## Accessibility
+
+<Tip>
+Best practices implemented:
+- Descriptive link text (not "Click here")
+- External link indicators (`target="_blank"`)
+- Security attributes (`rel="noopener noreferrer"`)
+- Semantic HTML structure
+</Tip>
+
+## Related Components
+
+- [ExperienceSection](/components/experience-section) - Previous section
+- [Navbar](/components/navbar) - Navigation component
+- [Overview](/components/overview) - Component architecture

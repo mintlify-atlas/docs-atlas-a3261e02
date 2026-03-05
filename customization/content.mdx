@@ -1,0 +1,353 @@
+---
+title: 'Customizing Content'
+description: 'Learn how to update personal information, skills, experience, and contact details in your portfolio'
+icon: 'file-pen'
+---
+
+This guide shows you how to customize all the content in your portfolio website by editing the React components.
+
+## Updating Personal Information
+
+The hero section contains your main personal information and introduction.
+
+### Hero Section
+
+Edit `src/components/HeroSection.tsx` to update your name, title, and introduction.
+
+<Steps>
+  <Step title="Update Your Title">
+    Modify the job title displayed above your name:
+
+    ```tsx src/components/HeroSection.tsx
+    <motion.p
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.2, duration: 0.6 }}
+      className="text-primary font-heading text-sm tracking-[0.3em] uppercase mb-6"
+    >
+      Chief Technology Officer  {/* Change this to your title */}
+    </motion.p>
+    ```
+
+    <Tip>
+      Keep your title concise and professional. Examples: "Full Stack Developer", "Product Designer", "Data Scientist"
+    </Tip>
+  </Step>
+
+  <Step title="Update Your Name">
+    Change the main heading to display your name:
+
+    ```tsx src/components/HeroSection.tsx
+    <motion.h1
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.4, duration: 0.6 }}
+      className="font-heading text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight mb-6"
+    >
+      David{" "}  {/* First name */}
+      <span className="text-gradient">Carrascosa</span>  {/* Last name with gradient */}
+    </motion.h1>
+    ```
+
+    <Note>
+      The gradient effect is applied to the second part of your name using the `text-gradient` class.
+    </Note>
+  </Step>
+
+  <Step title="Update Your Introduction">
+    Modify your professional summary and current company:
+
+    ```tsx src/components/HeroSection.tsx
+    <motion.p
+      className="text-muted-foreground text-lg md:text-xl max-w-2xl mx-auto leading-relaxed mb-4"
+    >
+      +20 años liderando tecnología, consultoría y desarrollo de software.
+      Actualmente impulsando la transformación digital desde{" "}
+      <span className="text-primary font-medium">Grupo SADE</span>.  {/* Your company */}
+    </motion.p>
+    ```
+  </Step>
+
+  <Step title="Update Your Location">
+    Change your location:
+
+    ```tsx src/components/HeroSection.tsx
+    <motion.p
+      className="text-muted-foreground/60 text-sm tracking-wide"
+    >
+      Madrid, España  {/* Your location */}
+    </motion.p>
+    ```
+  </Step>
+</Steps>
+
+## Updating About Section Stats
+
+The stats array in `src/components/AboutSection.tsx` displays your key metrics.
+
+<CodeGroup>
+```tsx Before
+const stats = [
+  { icon: Briefcase, value: "+20", label: "Años de experiencia" },
+  { icon: Users, value: "+70", label: "Clientes atendidos" },
+  { icon: Lightbulb, value: "+200", label: "Proyectos exitosos" },
+];
+```
+
+```tsx After
+const stats = [
+  { icon: Briefcase, value: "5+", label: "Years Experience" },
+  { icon: Users, value: "50+", label: "Happy Clients" },
+  { icon: Lightbulb, value: "100+", label: "Projects Completed" },
+];
+```
+</CodeGroup>
+
+### Changing Stat Icons
+
+You can use any icon from [Lucide React](https://lucide.dev/):
+
+```tsx src/components/AboutSection.tsx
+import { Briefcase, Users, Lightbulb, Award, Code, Rocket } from "lucide-react";
+
+const stats = [
+  { icon: Code, value: "5+", label: "Years Experience" },
+  { icon: Award, value: "15", label: "Awards Won" },
+  { icon: Rocket, value: "100+", label: "Projects Launched" },
+];
+```
+
+## Updating About Section Content
+
+Edit the text content in `src/components/AboutSection.tsx`:
+
+<Steps>
+  <Step title="Update Section Title">
+    ```tsx src/components/AboutSection.tsx
+    <p className="text-primary font-heading text-sm tracking-[0.2em] uppercase mb-3">
+      Sobre mí  {/* Section label */}
+    </p>
+    <h2 className="font-heading text-3xl md:text-5xl font-bold mb-8">
+      Tecnología con visión de negocio  {/* Main heading */}
+    </h2>
+    ```
+  </Step>
+
+  <Step title="Update Biography Paragraphs">
+    ```tsx src/components/AboutSection.tsx
+    <div className="md:col-span-3 space-y-5">
+      <p className="text-secondary-foreground leading-relaxed text-lg">
+        Your first paragraph - make it compelling!
+      </p>
+      <p className="text-muted-foreground leading-relaxed">
+        Second paragraph with more details about your current role.
+      </p>
+      <p className="text-muted-foreground leading-relaxed">
+        Third paragraph about your approach and values.
+      </p>
+    </div>
+    ```
+  </Step>
+</Steps>
+
+## Modifying Skills
+
+Update the skills array in `src/components/SkillsSection.tsx` to showcase your expertise.
+
+### Adding New Skills
+
+<Steps>
+  <Step title="Import Required Icons">
+    ```tsx src/components/SkillsSection.tsx
+    import { Brain, Code, Shield, Workflow, Cloud, Users, Database, Palette } from "lucide-react";
+    ```
+  </Step>
+
+  <Step title="Add Your Skills">
+    ```tsx src/components/SkillsSection.tsx
+    const skills = [
+      {
+        icon: Code,
+        title: "Frontend Development",
+        description: "Building responsive, accessible web applications with React, TypeScript, and modern CSS.",
+      },
+      {
+        icon: Database,
+        title: "Backend Development",
+        description: "Designing scalable APIs and services with Node.js, Python, and cloud infrastructure.",
+      },
+      {
+        icon: Palette,
+        title: "UI/UX Design",
+        description: "Creating beautiful, user-centered interfaces with Figma and modern design systems.",
+      },
+      // Add more skills...
+    ];
+    ```
+  </Step>
+</Steps>
+
+<Warning>
+  The layout uses a 3-column grid on large screens. For best visual balance, use 3, 6, or 9 skills.
+</Warning>
+
+### Removing Skills
+
+Simply delete the skill object from the array:
+
+```tsx src/components/SkillsSection.tsx
+const skills = [
+  {
+    icon: Brain,
+    title: "IA Generativa",
+    description: "...",
+  },
+  // Delete this skill by removing the entire object
+  // {
+  //   icon: Code,
+  //   title: "Desarrollo de Software",
+  //   description: "...",
+  // },
+  {
+    icon: Workflow,
+    title: "Transformación Digital",
+    description: "...",
+  },
+];
+```
+
+## Updating Experience
+
+Modify the experiences array in `src/components/ExperienceSection.tsx`:
+
+<CodeGroup>
+```tsx Template
+const experiences = [
+  {
+    role: "Your Job Title",
+    company: "Company Name",
+    period: "2020 - Present",
+    description: "Brief description of your role and key achievements.",
+    highlights: ["Skill 1", "Skill 2", "Skill 3", "Skill 4"],
+  },
+];
+```
+
+```tsx Example
+const experiences = [
+  {
+    role: "Senior Software Engineer",
+    company: "Tech Startup Inc.",
+    period: "2022 - Present",
+    description: "Leading the development of a SaaS platform serving 10,000+ users. Architected microservices infrastructure and mentored junior developers.",
+    highlights: ["React", "Node.js", "AWS", "Team Leadership"],
+  },
+  {
+    role: "Full Stack Developer",
+    company: "Digital Agency",
+    period: "2020 - 2022",
+    description: "Built custom web applications for clients across various industries. Implemented CI/CD pipelines and improved deployment efficiency by 40%.",
+    highlights: ["JavaScript", "Python", "Docker", "PostgreSQL"],
+  },
+];
+```
+</CodeGroup>
+
+## Updating Social Links and Contact Info
+
+Edit `src/components/ContactSection.tsx` to update your contact information:
+
+<Steps>
+  <Step title="Update Section Heading and Description">
+    ```tsx src/components/ContactSection.tsx
+    <p className="text-primary font-heading text-sm tracking-[0.2em] uppercase mb-3">
+      Contacto  {/* Section label */}
+    </p>
+    <h2 className="font-heading text-3xl md:text-5xl font-bold mb-6">
+      Hablemos  {/* Main heading */}
+    </h2>
+    <p className="text-muted-foreground text-lg leading-relaxed mb-12">
+      Your call-to-action message here.
+    </p>
+    ```
+  </Step>
+
+  <Step title="Update LinkedIn Link">
+    ```tsx src/components/ContactSection.tsx
+    <a
+      href="https://www.linkedin.com/in/yourprofile"  {/* Your LinkedIn URL */}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="inline-flex items-center gap-3 px-6 py-3 rounded-lg bg-primary text-primary-foreground font-heading font-medium hover:opacity-90 transition-opacity"
+    >
+      <Linkedin className="w-5 h-5" />
+      LinkedIn
+    </a>
+    ```
+  </Step>
+
+  <Step title="Update Website Link">
+    ```tsx src/components/ContactSection.tsx
+    <a
+      href="https://www.yourwebsite.com"  {/* Your website URL */}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="inline-flex items-center gap-3 px-6 py-3 rounded-lg border border-border text-foreground font-heading font-medium hover:border-primary/50 transition-colors"
+    >
+      <Globe className="w-5 h-5" />
+      Website  {/* Button text */}
+    </a>
+    ```
+  </Step>
+
+  <Step title="Update Email Link">
+    ```tsx src/components/ContactSection.tsx
+    <a
+      href="mailto:your.email@example.com"  {/* Your email */}
+      className="inline-flex items-center gap-3 px-6 py-3 rounded-lg border border-border text-foreground font-heading font-medium hover:border-primary/50 transition-colors"
+    >
+      <Mail className="w-5 h-5" />
+      Email
+    </a>
+    ```
+  </Step>
+
+  <Step title="Update Footer">
+    ```tsx src/components/ContactSection.tsx
+    <div className="flex flex-col md:flex-row items-center justify-between text-muted-foreground/50 text-sm">
+      <p className="font-heading">© 2026 Your Name</p>
+      <p>Your Title · Company · Tagline</p>
+    </div>
+    ```
+  </Step>
+</Steps>
+
+### Adding GitHub or Other Social Links
+
+You can add more social links by importing additional icons:
+
+```tsx src/components/ContactSection.tsx
+import { Linkedin, Globe, Mail, Github, Twitter } from "lucide-react";
+
+// Add after existing links:
+<a
+  href="https://github.com/yourusername"
+  target="_blank"
+  rel="noopener noreferrer"
+  className="inline-flex items-center gap-3 px-6 py-3 rounded-lg border border-border text-foreground font-heading font-medium hover:border-primary/50 transition-colors"
+>
+  <Github className="w-5 h-5" />
+  GitHub
+</a>
+```
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Styling" icon="palette" href="/customization/styling">
+    Customize colors, fonts, and visual design
+  </Card>
+  <Card title="Adding Sections" icon="plus" href="/customization/adding-sections">
+    Create new sections for projects, testimonials, and more
+  </Card>
+</CardGroup>

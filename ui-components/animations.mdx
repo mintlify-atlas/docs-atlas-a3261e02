@@ -1,0 +1,580 @@
+---
+title: Animations
+description: Animation patterns using Framer Motion and Tailwind CSS for smooth, performant UI transitions
+---
+
+## Overview
+
+This portfolio uses **Framer Motion** for declarative, performant animations combined with **Tailwind CSS** for utility-based animations. The approach focuses on enhancing user experience without sacrificing performance.
+
+<Note>
+  Framer Motion version: `^12.34.5`
+</Note>
+
+## Framer Motion Integration
+
+Framer Motion is imported and used throughout the application:
+
+```tsx
+import { motion } from "framer-motion"
+```
+
+### Why Framer Motion?
+
+<CardGroup cols={2}>
+  <Card title="Declarative" icon="code">
+    Define animations with simple props instead of imperative code
+  </Card>
+  <Card title="Performant" icon="zap">
+    GPU-accelerated transforms and opacity changes
+  </Card>
+  <Card title="Gestures" icon="hand">
+    Built-in support for drag, hover, and tap interactions
+  </Card>
+  <Card title="Variants" icon="layers">
+    Reusable animation configurations
+  </Card>
+</CardGroup>
+
+## Animation Patterns
+
+### Fade In on Mount
+
+From `src/components/HeroSection.tsx`:
+
+```tsx
+import { motion } from "framer-motion"
+
+<motion.div
+  initial={{ opacity: 0, y: 40 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.8, ease: "easeOut" }}
+  className="max-w-4xl mx-auto text-center"
+>
+  {/* Content */}
+</motion.div>
+```
+
+**Properties:**
+- `initial`: Starting state (invisible, 40px down)
+- `animate`: End state (visible, original position)
+- `transition`: Animation timing and easing
+
+### Staggered Animations
+
+Sequential animations with delays:
+
+```tsx
+<motion.p
+  initial={{ opacity: 0, y: 20 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ delay: 0.2, duration: 0.6 }}
+  className="text-primary font-heading"
+>
+  Chief Technology Officer
+</motion.p>
+
+<motion.h1
+  initial={{ opacity: 0, y: 20 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ delay: 0.4, duration: 0.6 }}
+  className="font-heading text-5xl md:text-7xl"
+>
+  David <span className="text-gradient">Carrascosa</span>
+</motion.h1>
+
+<motion.p
+  initial={{ opacity: 0, y: 20 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ delay: 0.6, duration: 0.6 }}
+  className="text-muted-foreground text-lg"
+>
+  +20 años liderando tecnología
+</motion.p>
+```
+
+### Scroll-Triggered Animations
+
+From `src/components/AboutSection.tsx`:
+
+```tsx
+<motion.div
+  initial={{ opacity: 0, y: 30 }}
+  whileInView={{ opacity: 1, y: 0 }}
+  viewport={{ once: true }}
+  transition={{ duration: 0.6 }}
+>
+  <p className="text-primary font-heading">Sobre mí</p>
+  <h2 className="font-heading text-3xl md:text-5xl font-bold">
+    Tecnología con visión de negocio
+  </h2>
+</motion.div>
+```
+
+**Key Props:**
+- `whileInView`: Animation when element enters viewport
+- `viewport={{ once: true }}`: Only animate once (performance optimization)
+
+### List Item Animations
+
+From `src/components/SkillsSection.tsx`:
+
+```tsx
+const skills = [
+  { icon: Brain, title: "IA Generativa", description: "..." },
+  { icon: Code, title: "Desarrollo de Software", description: "..." },
+  // ... more items
+]
+
+<div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+  {skills.map((skill, i) => (
+    <motion.div
+      key={skill.title}
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ delay: i * 0.1, duration: 0.5 }}
+      className="bg-background border border-border rounded-lg p-6"
+    >
+      <div className="w-11 h-11 rounded-lg bg-primary/10">
+        <skill.icon className="w-5 h-5 text-primary" />
+      </div>
+      <h3 className="font-heading text-lg font-semibold">{skill.title}</h3>
+      <p className="text-muted-foreground text-sm">{skill.description}</p>
+    </motion.div>
+  ))}
+</div>
+```
+
+**Pattern**: Each item animates with incrementing delay (`delay: i * 0.1`)
+
+### Hover Animations
+
+```tsx
+<motion.div
+  className="bg-background border border-border rounded-lg p-6"
+  whileHover={{ scale: 1.05, borderColor: "hsl(207 90% 54%)" }}
+  transition={{ duration: 0.2 }}
+>
+  {/* Card content */}
+</motion.div>
+```
+
+### Slide In Animations
+
+From `src/components/AboutSection.tsx` stats cards:
+
+```tsx
+{stats.map((stat, i) => (
+  <motion.div
+    key={stat.label}
+    initial={{ opacity: 0, x: 20 }}
+    whileInView={{ opacity: 1, x: 0 }}
+    viewport={{ once: true }}
+    transition={{ delay: 0.3 + i * 0.1, duration: 0.5 }}
+    className="bg-card border border-border rounded-lg p-5"
+  >
+    <div className="w-10 h-10 rounded-md bg-primary/10">
+      <stat.icon className="w-5 h-5 text-primary" />
+    </div>
+    <div>
+      <p className="font-heading text-2xl font-bold">{stat.value}</p>
+      <p className="text-muted-foreground text-sm">{stat.label}</p>
+    </div>
+  </motion.div>
+))}
+```
+
+## Tailwind CSS Animations
+
+Defined in `tailwind.config.ts`:
+
+```tsx
+keyframes: {
+  "accordion-down": {
+    from: { height: "0" },
+    to: { height: "var(--radix-accordion-content-height)" },
+  },
+  "accordion-up": {
+    from: { height: "var(--radix-accordion-content-height)" },
+    to: { height: "0" },
+  },
+  "float": {
+    "0%, 100%": { transform: "translateY(0)" },
+    "50%": { transform: "translateY(-10px)" },
+  },
+},
+animation: {
+  "accordion-down": "accordion-down 0.2s ease-out",
+  "accordion-up": "accordion-up 0.2s ease-out",
+  "float": "float 6s ease-in-out infinite",
+}
+```
+
+### Float Animation
+
+Used in the hero section for the scroll indicator:
+
+```tsx
+import { ChevronDown } from "lucide-react"
+
+<motion.div
+  initial={{ opacity: 0 }}
+  animate={{ opacity: 1 }}
+  transition={{ delay: 1.2, duration: 0.6 }}
+  className="absolute bottom-10 left-1/2 -translate-x-1/2"
+>
+  <a href="#about" className="text-muted-foreground/40 hover:text-primary transition-colors">
+    <ChevronDown className="w-6 h-6 animate-float" />
+  </a>
+</motion.div>
+```
+
+### Accordion Animations
+
+Used by the Accordion component from shadcn/ui:
+
+```tsx
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion"
+
+<Accordion type="single" collapsible>
+  <AccordionItem value="item-1">
+    <AccordionTrigger>Is it accessible?</AccordionTrigger>
+    <AccordionContent>
+      Yes. It adheres to the WAI-ARIA design pattern.
+    </AccordionContent>
+  </AccordionItem>
+</Accordion>
+```
+
+The accordion uses `animate-accordion-down` and `animate-accordion-up` classes.
+
+## Custom Animation Utilities
+
+Defined in `src/index.css`:
+
+```css
+.text-gradient {
+  @apply bg-clip-text text-transparent;
+  background-image: linear-gradient(135deg, hsl(207 90% 54%), hsl(207 80% 70%));
+}
+
+.border-glow {
+  border-color: hsl(207 90% 54% / 0.3);
+  box-shadow: var(--glow-primary);
+}
+
+.section-divider {
+  @apply w-full h-px;
+  background: linear-gradient(90deg, transparent, hsl(207 90% 54% / 0.3), transparent);
+}
+```
+
+### Usage Examples
+
+```tsx
+// Gradient text
+<h1 className="font-heading text-5xl">
+  David <span className="text-gradient">Carrascosa</span>
+</h1>
+
+// Glowing border
+<div className="bg-card border border-border rounded-lg p-5 border-glow">
+  {/* Content */}
+</div>
+
+// Section divider
+<div className="section-divider mb-8" />
+```
+
+## Animation Variants Pattern
+
+Reusable animation configurations:
+
+```tsx
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+    },
+  },
+}
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0 },
+}
+
+<motion.div
+  variants={containerVariants}
+  initial="hidden"
+  animate="visible"
+>
+  {items.map((item) => (
+    <motion.div key={item.id} variants={itemVariants}>
+      {item.content}
+    </motion.div>
+  ))}
+</motion.div>
+```
+
+## Gesture Animations
+
+### Drag
+
+```tsx
+<motion.div
+  drag
+  dragConstraints={{ left: -100, right: 100, top: -100, bottom: 100 }}
+  dragElastic={0.2}
+  className="w-24 h-24 bg-primary rounded-lg cursor-grab active:cursor-grabbing"
+/>
+```
+
+### Tap
+
+```tsx
+<motion.button
+  whileTap={{ scale: 0.95 }}
+  className="px-6 py-3 bg-primary text-white rounded-lg"
+>
+  Click Me
+</motion.button>
+```
+
+### Hover
+
+```tsx
+<motion.div
+  whileHover={{ scale: 1.05, rotate: 2 }}
+  transition={{ type: "spring", stiffness: 300 }}
+  className="p-6 bg-card rounded-lg cursor-pointer"
+>
+  Hover over me
+</motion.div>
+```
+
+## Background Animations
+
+From the hero section:
+
+```tsx
+<section className="relative min-h-screen" style={{ background: "var(--hero-gradient)" }}>
+  {/* Grid pattern background */}
+  <div
+    className="absolute inset-0 opacity-[0.04]"
+    style={{
+      backgroundImage: `linear-gradient(hsl(207 90% 54%) 1px, transparent 1px), linear-gradient(90deg, hsl(207 90% 54%) 1px, transparent 1px)`,
+      backgroundSize: "60px 60px"
+    }}
+  />
+
+  {/* Blur glow effect */}
+  <div
+    className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full opacity-20 blur-[120px]"
+    style={{ background: "hsl(207 90% 54%)" }}
+  />
+</section>
+```
+
+## Performance Considerations
+
+<Tip>
+  Only animate transform and opacity properties for 60fps performance. Avoid animating layout properties like width, height, or margin.
+</Tip>
+
+### Good (GPU Accelerated)
+
+```tsx
+<motion.div
+  animate={{
+    opacity: 1,
+    x: 0,
+    y: 0,
+    scale: 1,
+    rotate: 0,
+  }}
+>
+```
+
+### Avoid (Causes Layout Reflow)
+
+```tsx
+// Don't do this
+<motion.div
+  animate={{
+    width: "100%",
+    height: 200,
+    padding: 20,
+  }}
+>
+```
+
+### Optimization Techniques
+
+<Tabs>
+  <Tab title="viewport once">
+    Only animate on first scroll into view:
+
+    ```tsx
+    <motion.div
+      whileInView={{ opacity: 1 }}
+      viewport={{ once: true }}
+    >
+    ```
+  </Tab>
+
+  <Tab title="will-change">
+    Hint browser about upcoming animations:
+
+    ```tsx
+    <motion.div
+      style={{ willChange: "transform" }}
+      animate={{ x: 100 }}
+    >
+    ```
+  </Tab>
+
+  <Tab title="layoutId">
+    Shared element transitions:
+
+    ```tsx
+    <motion.div layoutId="shared-element">
+    ```
+  </Tab>
+
+  <Tab title="Reduce motion">
+    Respect user preferences:
+
+    ```tsx
+    const shouldReduceMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches
+
+    <motion.div
+      initial={shouldReduceMotion ? false : { opacity: 0 }}
+      animate={shouldReduceMotion ? false : { opacity: 1 }}
+    >
+    ```
+  </Tab>
+</Tabs>
+
+## Animation Timing
+
+### Easing Functions
+
+```tsx
+// Linear
+transition={{ ease: "linear" }}
+
+// Ease out (default, good for entrances)
+transition={{ ease: "easeOut" }}
+
+// Ease in (good for exits)
+transition={{ ease: "easeIn" }}
+
+// Ease in-out (good for loops)
+transition={{ ease: "easeInOut" }}
+
+// Custom cubic bezier
+transition={{ ease: [0.17, 0.67, 0.83, 0.67] }}
+```
+
+### Spring Animations
+
+```tsx
+<motion.div
+  animate={{ scale: 1 }}
+  transition={{
+    type: "spring",
+    stiffness: 260,
+    damping: 20,
+  }}
+>
+```
+
+## Best Practices
+
+<CardGroup cols={2}>
+  <Card title="Do" icon="check">
+    - Use viewport={{ once: true }} for performance
+    - Animate transform and opacity only
+    - Keep animations under 500ms for interactions
+    - Test on low-end devices
+  </Card>
+  <Card title="Don't" icon="x">
+    - Don't animate layout properties
+    - Avoid excessive animation duration
+    - Don't ignore reduced motion preferences
+    - Don't animate everything
+  </Card>
+</CardGroup>
+
+## Common Animation Recipes
+
+### Fade Up on Scroll
+
+```tsx
+<motion.div
+  initial={{ opacity: 0, y: 30 }}
+  whileInView={{ opacity: 1, y: 0 }}
+  viewport={{ once: true }}
+  transition={{ duration: 0.6 }}
+>
+```
+
+### Slide In from Left
+
+```tsx
+<motion.div
+  initial={{ opacity: 0, x: -50 }}
+  animate={{ opacity: 1, x: 0 }}
+  transition={{ duration: 0.5 }}
+>
+```
+
+### Scale on Hover
+
+```tsx
+<motion.div
+  whileHover={{ scale: 1.05 }}
+  transition={{ duration: 0.2 }}
+>
+```
+
+### Stagger Children
+
+```tsx
+<motion.div
+  initial="hidden"
+  animate="visible"
+  variants={{
+    visible: { transition: { staggerChildren: 0.1 } },
+  }}
+>
+  {items.map((item) => (
+    <motion.div
+      key={item.id}
+      variants={{
+        hidden: { opacity: 0, y: 20 },
+        visible: { opacity: 1, y: 0 },
+      }}
+    >
+      {item.content}
+    </motion.div>
+  ))}
+</motion.div>
+```
+
+## Resources
+
+- [Framer Motion Documentation](https://www.framer.com/motion/)
+- [Tailwind CSS Animation](https://tailwindcss.com/docs/animation)
+- [Web Animations Performance](https://web.dev/animations-guide/)

@@ -1,0 +1,430 @@
+---
+title: "Responsive Design"
+description: "Breakpoints, mobile-first patterns, and responsive layout strategies"
+---
+
+## Overview
+
+This portfolio follows a **mobile-first responsive design** approach using Tailwind CSS breakpoints. Styles are written for mobile devices first, then enhanced for larger screens using responsive modifiers.
+
+## Breakpoint System
+
+Tailwind CSS provides five default breakpoints:
+
+| Breakpoint | Pixels | Modifier | Description |
+|------------|--------|----------|-------------|
+| `xs` | 0px | (none) | Mobile phones |
+| `sm` | 640px | `sm:` | Large phones |
+| `md` | 768px | `md:` | Tablets |
+| `lg` | 1024px | `lg:` | Laptops |
+| `xl` | 1280px | `xl:` | Desktops |
+| `2xl` | 1536px | `2xl:` | Large screens |
+
+### Custom Container Breakpoint
+
+The container has a custom max-width at 2xl:
+
+```typescript tailwind.config.ts
+container: {
+  center: true,
+  padding: "2rem",
+  screens: {
+    "2xl": "1400px",  // Caps container width
+  },
+}
+```
+
+<Note>
+This prevents content from becoming too wide on ultra-large displays.
+</Note>
+
+## Mobile-First Approach
+
+Styles are written from smallest to largest screens:
+
+<Tabs>
+  <Tab title="Correct">
+    ```tsx
+    {/* Mobile: text-5xl, Tablet: text-7xl, Desktop: text-8xl */}
+    <h1 className="text-5xl md:text-7xl lg:text-8xl">
+      David Carrascosa
+    </h1>
+    ```
+  </Tab>
+  <Tab title="Incorrect">
+    ```tsx
+    {/* Don't start with large screen styles */}
+    <h1 className="text-8xl md:text-5xl">
+      David Carrascosa
+    </h1>
+    ```
+  </Tab>
+</Tabs>
+
+<Tip>
+**Why mobile-first?** It ensures a solid foundation for all devices and progressively enhances the experience.
+</Tip>
+
+## Responsive Typography
+
+### HeroSection Example
+
+The hero heading scales across breakpoints:
+
+```tsx HeroSection.tsx
+<h1 className="font-heading text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight mb-6">
+  David <span className="text-gradient">Carrascosa</span>
+</h1>
+```
+
+| Screen Size | Font Size | Pixels |
+|-------------|-----------|--------|
+| Mobile (default) | `text-5xl` | 48px |
+| Tablet (`md:`) | `text-7xl` | 72px |
+| Desktop (`lg:`) | `text-8xl` | 96px |
+
+### Paragraph Scaling
+
+```tsx HeroSection.tsx
+<p className="text-muted-foreground text-lg md:text-xl max-w-2xl mx-auto leading-relaxed mb-4">
+  +20 años liderando tecnología...
+</p>
+```
+
+- **Mobile**: `text-lg` (18px)
+- **Tablet+**: `text-xl` (20px)
+- **Max Width**: `max-w-2xl` (672px) for readability
+
+## Responsive Layouts
+
+### Container Usage
+
+The container utility provides responsive padding:
+
+```tsx
+<div className="container px-6">
+  {/* Content with responsive padding */}
+</div>
+```
+
+<CodeGroup>
+```tsx Mobile
+{/* Container on mobile has 2rem padding + px-6 */}
+<div className="container px-6">
+```
+
+```tsx 2xl Screens
+{/* Container is centered and capped at 1400px */}
+<div className="container px-6">
+```
+</CodeGroup>
+
+### Flexbox Patterns
+
+#### Centered Content
+
+```tsx HeroSection.tsx
+<section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+  <div className="container relative z-10 px-6">
+    <div className="max-w-4xl mx-auto text-center">
+      {/* Centered hero content */}
+    </div>
+  </div>
+</section>
+```
+
+Breakdown:
+- `min-h-screen`: Full viewport height
+- `flex items-center justify-center`: Center content vertically and horizontally
+- `max-w-4xl mx-auto`: Cap width and center
+
+## Navigation Responsiveness
+
+### Navbar Visibility
+
+The navbar hides links on mobile, shows on tablet+:
+
+```tsx Navbar.tsx
+<div className="hidden md:flex items-center gap-8">
+  {links.map((link) => (
+    <a href={link.href} className="text-sm text-muted-foreground hover:text-foreground transition-colors font-medium">
+      {link.label}
+    </a>
+  ))}
+</div>
+```
+
+| Screen | Class | Behavior |
+|--------|-------|----------|
+| Mobile | `hidden` | Links hidden |
+| Tablet+ | `md:flex` | Links visible in flex row |
+
+<Tip>
+Consider adding a mobile menu button for screen readers and touch navigation.
+</Tip>
+
+### Sticky Navigation
+
+```tsx Navbar.tsx
+<motion.nav className="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
+  <div className="container px-6 flex items-center justify-between h-16">
+    {/* Nav content */}
+  </div>
+</motion.nav>
+```
+
+- `fixed top-0 left-0 right-0`: Sticks to top on all screens
+- `z-50`: Ensures nav stays above other content
+- `h-16`: Fixed height of 64px
+
+## Responsive Spacing
+
+### Padding and Margins
+
+Consistent spacing across breakpoints:
+
+```tsx
+{/* Mobile: 6 units, Desktop: 12 units */}
+<div className="px-6 lg:px-12">
+
+{/* Responsive margin bottom */}
+<h1 className="mb-4 md:mb-6 lg:mb-8">
+```
+
+### Gap in Flex/Grid
+
+```tsx
+{/* Navigation links with responsive gap */}
+<div className="flex items-center gap-6 md:gap-8 lg:gap-10">
+```
+
+## Grid Systems
+
+### Responsive Columns
+
+```tsx
+{/* 1 column mobile, 2 tablet, 3 desktop */}
+<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+  <div>Item 1</div>
+  <div>Item 2</div>
+  <div>Item 3</div>
+</div>
+```
+
+### Auto-fit Pattern
+
+```tsx
+{/* Automatically fits items based on min width */}
+<div className="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-6">
+  {items.map(item => <Card key={item.id} />)}
+</div>
+```
+
+## Background Effects
+
+### Grid Pattern
+
+The hero section uses a responsive grid background:
+
+```tsx HeroSection.tsx
+<div
+  className="absolute inset-0 opacity-[0.04]"
+  style={{
+    backgroundImage: `linear-gradient(hsl(207 90% 54%) 1px, transparent 1px),
+                      linear-gradient(90deg, hsl(207 90% 54%) 1px, transparent 1px)`,
+    backgroundSize: "60px 60px"
+  }}
+/>
+```
+
+<Note>
+Fixed `backgroundSize` ensures the grid scales proportionally on all screens.
+</Note>
+
+### Blur Effects
+
+```tsx HeroSection.tsx
+<div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full opacity-20 blur-[120px]" />
+```
+
+- Fixed dimensions on all screens
+- `blur-[120px]`: Heavy blur for glow effect
+- `opacity-20`: Subtle visibility
+
+## Common Responsive Patterns
+
+### Pattern 1: Stack to Row
+
+```tsx
+{/* Vertical stack on mobile, horizontal row on desktop */}
+<div className="flex flex-col lg:flex-row gap-6">
+  <aside className="lg:w-1/3">Sidebar</aside>
+  <main className="lg:w-2/3">Content</main>
+</div>
+```
+
+### Pattern 2: Hide/Show Elements
+
+```tsx
+{/* Show on mobile only */}
+<button className="md:hidden">Menu</button>
+
+{/* Show on desktop only */}
+<nav className="hidden md:block">Navigation</nav>
+```
+
+### Pattern 3: Responsive Text Alignment
+
+```tsx
+{/* Center on mobile, left-align on desktop */}
+<div className="text-center lg:text-left">
+  <h2>Heading</h2>
+  <p>Description</p>
+</div>
+```
+
+### Pattern 4: Responsive Padding
+
+```tsx
+{/* More padding on larger screens */}
+<section className="py-12 md:py-16 lg:py-24">
+  Section content
+</section>
+```
+
+## Animations and Motion
+
+### Framer Motion Responsive Variants
+
+```tsx
+<motion.div
+  initial={{ opacity: 0, y: 40 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.8, ease: "easeOut" }}
+  className="max-w-4xl mx-auto text-center"
+>
+  {/* Responsive content */}
+</motion.div>
+```
+
+<Tip>
+Framer Motion animations work seamlessly with Tailwind's responsive classes.
+</Tip>
+
+### Reduced Motion
+
+Respect user preferences:
+
+```css App.css
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+```
+
+## Overflow Management
+
+### Preventing Horizontal Scroll
+
+```tsx
+{/* Common pattern for full-width sections */}
+<section className="relative overflow-hidden">
+  {/* Content that might overflow */}
+</section>
+```
+
+### Scroll Behavior
+
+```tsx
+{/* Smooth scrolling on anchor links */}
+<a href="#about" className="text-muted-foreground/40 hover:text-primary transition-colors">
+  <ChevronDown className="w-6 h-6 animate-float" />
+</a>
+```
+
+## Testing Responsive Design
+
+### Browser DevTools
+
+1. Open Chrome DevTools (F12)
+2. Click device toggle (Ctrl+Shift+M)
+3. Test these viewports:
+   - iPhone SE (375px)
+   - iPad (768px)
+   - Desktop (1920px)
+
+### Breakpoint Debugging
+
+Add a temporary indicator:
+
+```tsx
+<div className="fixed top-0 left-0 bg-red-500 text-white p-2 z-[9999]">
+  <span className="sm:hidden">xs</span>
+  <span className="hidden sm:inline md:hidden">sm</span>
+  <span className="hidden md:inline lg:hidden">md</span>
+  <span className="hidden lg:inline xl:hidden">lg</span>
+  <span className="hidden xl:inline 2xl:hidden">xl</span>
+  <span className="hidden 2xl:inline">2xl</span>
+</div>
+```
+
+## Best Practices
+
+<Tip>
+**Start Small**: Design and develop for mobile first, then enhance for larger screens.
+</Tip>
+
+1. **Use Breakpoint Modifiers Sparingly**: Only add them when the design actually changes
+2. **Test on Real Devices**: Emulators don't always match real-world performance
+3. **Consider Touch Targets**: Minimum 44x44px for interactive elements
+4. **Optimize Images**: Use responsive images with `srcset` for different densities
+5. **Avoid Fixed Widths**: Use `max-w-*` utilities instead of fixed widths
+
+## Accessibility Considerations
+
+### Focus States
+
+```tsx
+<button className="focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2">
+  Accessible Button
+</button>
+```
+
+### Keyboard Navigation
+
+Ensure interactive elements are reachable:
+
+```tsx
+<a href="#about" className="hover:text-primary focus:text-primary transition-colors">
+  Navigate
+</a>
+```
+
+## Performance Optimization
+
+### Lazy Loading
+
+```tsx
+import { lazy, Suspense } from 'react';
+
+const HeroSection = lazy(() => import('./components/HeroSection'));
+
+<Suspense fallback={<div>Loading...</div>}>
+  <HeroSection />
+</Suspense>
+```
+
+### Code Splitting
+
+Tailwind's JIT compiler only includes used classes:
+
+```tsx
+{/* Only these specific classes are included in final CSS */}
+<h1 className="text-5xl md:text-7xl lg:text-8xl">
+```
+
+## Related Documentation
+
+- [Tailwind CSS Setup](/styling/tailwind) - Configuration and utilities
+- [Theming](/styling/theming) - CSS variables and design tokens

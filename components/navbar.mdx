@@ -1,0 +1,398 @@
+---
+title: 'Navbar'
+description: 'Fixed navigation component with scroll-based styling and smooth anchor links'
+---
+
+## Overview
+
+The `Navbar` component provides fixed navigation at the top of the page. It features scroll-based background changes, smooth anchor link navigation, and a clean responsive design.
+
+## Features
+
+- Fixed positioning that stays visible during scroll
+- Dynamic background on scroll (transparent to blurred)
+- Smooth anchor link navigation to page sections
+- Logo/brand element
+- Desktop-only navigation menu
+- Scroll event handling with useEffect
+- Entrance animation on page load
+
+## Component Structure
+
+```tsx
+import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+
+const links = [
+  { label: "Sobre mí", href: "#about" },
+  { label: "Trayectoria", href: "#experience" },
+  { label: "Competencias", href: "#skills" },
+  { label: "Contacto", href: "#contact" },
+];
+
+const Navbar = () => {
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 50);
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  return (
+    <motion.nav /* ... */>
+      {/* Navigation content */}
+    </motion.nav>
+  );
+};
+```
+
+## Scroll Detection
+
+### State Management
+
+```tsx
+const [scrolled, setScrolled] = useState(false);
+```
+
+Tracks whether the user has scrolled past the threshold (50px).
+
+### Event Listener Setup
+
+```tsx
+useEffect(() => {
+  const onScroll = () => setScrolled(window.scrollY > 50);
+  window.addEventListener("scroll", onScroll);
+  return () => window.removeEventListener("scroll", onScroll);
+}, []);
+```
+
+<Steps>
+  <Step title="Define Handler">
+    Creates a function that checks if scroll position exceeds 50px
+  </Step>
+  <Step title="Add Listener">
+    Attaches scroll event listener to window on component mount
+  </Step>
+  <Step title="Cleanup">
+    Removes event listener on component unmount to prevent memory leaks
+  </Step>
+</Steps>
+
+## Dynamic Styling
+
+```tsx
+<motion.nav
+  className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+    scrolled ? "bg-background/80 backdrop-blur-lg border-b border-border" : ""
+  }`}
+>
+```
+
+<Tabs>
+  <Tab title="Not Scrolled">
+    - Transparent background
+    - No border
+    - Floats above hero section
+  </Tab>
+  <Tab title="Scrolled">
+    - Semi-transparent background (`bg-background/80`)
+    - Backdrop blur effect
+    - Bottom border for separation
+  </Tab>
+</Tabs>
+
+### Transition Effect
+
+```tsx
+transition-all duration-300
+```
+
+Smooth 300ms transition for all property changes (background, border, blur).
+
+## Navigation Links
+
+### Link Data Structure
+
+```typescript
+interface NavLink {
+  label: string;  // Display text
+  href: string;   // Anchor href (e.g., "#about")
+}
+
+const links: NavLink[] = [
+  { label: "Sobre mí", href: "#about" },
+  { label: "Trayectoria", href: "#experience" },
+  { label: "Competencias", href: "#skills" },
+  { label: "Contacto", href: "#contact" },
+];
+```
+
+### Link Rendering
+
+```tsx
+<div className="hidden md:flex items-center gap-8">
+  {links.map((link) => (
+    <a
+      key={link.href}
+      href={link.href}
+      className="text-sm text-muted-foreground hover:text-foreground 
+                 transition-colors font-medium"
+    >
+      {link.label}
+    </a>
+  ))}
+</div>
+```
+
+<Note>
+Links are hidden on mobile (`hidden md:flex`). Consider adding a mobile menu for better mobile UX.
+</Note>
+
+## Brand Logo
+
+```tsx
+<a href="#" className="font-heading font-bold text-lg tracking-tight">
+  DC<span className="text-primary">.</span>
+</a>
+```
+
+Monogram logo with accent period:
+- Bold heading font
+- Tight letter spacing
+- Primary color accent on period
+
+## Container Layout
+
+```tsx
+<div className="container px-6 flex items-center justify-between h-16">
+  <a href="#" /* Logo */>
+    DC<span className="text-primary">.</span>
+  </a>
+  <div className="hidden md:flex items-center gap-8">
+    {/* Links */}
+  </div>
+</div>
+```
+
+- Fixed height: `h-16` (64px)
+- Flexbox: Space between logo and links
+- Standard container padding: `px-6`
+
+## Entrance Animation
+
+```tsx
+<motion.nav
+  initial={{ y: -20, opacity: 0 }}
+  animate={{ y: 0, opacity: 1 }}
+  transition={{ delay: 1, duration: 0.5 }}
+  // ...
+>
+```
+
+Navbar animates in from above after 1 second delay, allowing hero content to appear first.
+
+## Full Component Code
+
+<CodeGroup>
+
+```tsx Navbar.tsx
+import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+
+const links = [
+  { label: "Sobre mí", href: "#about" },
+  { label: "Trayectoria", href: "#experience" },
+  { label: "Competencias", href: "#skills" },
+  { label: "Contacto", href: "#contact" },
+];
+
+const Navbar = () => {
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 50);
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  return (
+    <motion.nav
+      initial={{ y: -20, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ delay: 1, duration: 0.5 }}
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        scrolled ? "bg-background/80 backdrop-blur-lg border-b border-border" : ""
+      }`}
+    >
+      <div className="container px-6 flex items-center justify-between h-16">
+        <a href="#" className="font-heading font-bold text-lg tracking-tight">
+          DC<span className="text-primary">.</span>
+        </a>
+        <div className="hidden md:flex items-center gap-8">
+          {links.map((link) => (
+            <a
+              key={link.href}
+              href={link.href}
+              className="text-sm text-muted-foreground hover:text-foreground transition-colors font-medium"
+            >
+              {link.label}
+            </a>
+          ))}
+        </div>
+      </div>
+    </motion.nav>
+  );
+};
+
+export default Navbar;
+```
+
+</CodeGroup>
+
+## Smooth Scrolling
+
+Enable smooth scrolling for anchor links in your global CSS:
+
+```css
+html {
+  scroll-behavior: smooth;
+}
+
+/* Optional: Offset for fixed navbar */
+section[id] {
+  scroll-margin-top: 80px;
+}
+```
+
+## Customization
+
+<Steps>
+  <Step title="Add Mobile Menu">
+    Implement a hamburger menu that shows navigation links on mobile devices
+  </Step>
+  <Step title="Change Scroll Threshold">
+    Modify the `50` value in `window.scrollY > 50` to trigger styling at different scroll positions
+  </Step>
+  <Step title="Update Links">
+    Modify the `links` array to match your section IDs
+  </Step>
+  <Step title="Customize Logo">
+    Replace the monogram with an image or different text
+  </Step>
+</Steps>
+
+## Adding Active Link Highlighting
+
+Track the active section and highlight the corresponding link:
+
+```tsx
+const [activeSection, setActiveSection] = useState("");
+
+useEffect(() => {
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          setActiveSection(entry.target.id);
+        }
+      });
+    },
+    { threshold: 0.5 }
+  );
+
+  document.querySelectorAll('section[id]').forEach((section) => {
+    observer.observe(section);
+  });
+
+  return () => observer.disconnect();
+}, []);
+
+// In link rendering:
+<a
+  className={`text-sm font-medium transition-colors ${
+    activeSection === link.href.slice(1) 
+      ? "text-primary" 
+      : "text-muted-foreground hover:text-foreground"
+  }`}
+>
+```
+
+## Mobile Menu Example
+
+<CodeGroup>
+
+```tsx Mobile Menu Toggle
+import { Menu, X } from "lucide-react";
+
+const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+// In navbar:
+<button
+  onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+  className="md:hidden p-2"
+>
+  {mobileMenuOpen ? <X /> : <Menu />}
+</button>
+
+{mobileMenuOpen && (
+  <div className="absolute top-16 left-0 right-0 bg-background border-b border-border p-6">
+    {links.map((link) => (
+      <a
+        key={link.href}
+        href={link.href}
+        onClick={() => setMobileMenuOpen(false)}
+        className="block py-2 text-muted-foreground hover:text-foreground"
+      >
+        {link.label}
+      </a>
+    ))}
+  </div>
+)}
+```
+
+</CodeGroup>
+
+## Usage Example
+
+```tsx
+import Navbar from '@/components/Navbar';
+
+function App() {
+  return (
+    <>
+      <Navbar />
+      <HeroSection />
+      <AboutSection />
+      <SkillsSection />
+      <ExperienceSection />
+      <ContactSection />
+    </>
+  );
+}
+```
+
+## Performance Considerations
+
+<Tip>
+The scroll event listener is properly cleaned up in the useEffect return function to prevent memory leaks. Consider throttling the scroll handler for better performance on low-end devices.
+</Tip>
+
+```tsx
+import { throttle } from 'lodash';
+
+useEffect(() => {
+  const onScroll = throttle(() => setScrolled(window.scrollY > 50), 100);
+  window.addEventListener("scroll", onScroll);
+  return () => {
+    window.removeEventListener("scroll", onScroll);
+    onScroll.cancel();
+  };
+}, []);
+```
+
+## Related Components
+
+- [HeroSection](/components/hero-section) - First section linked by navbar
+- [ContactSection](/components/contact-section) - Final section linked by navbar
+- [Overview](/components/overview) - Component architecture

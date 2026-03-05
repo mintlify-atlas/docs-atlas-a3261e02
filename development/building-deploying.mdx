@@ -1,0 +1,501 @@
+---
+title: 'Building & Deploying'
+description: 'Build for production and deploy your React portfolio to various hosting platforms'
+---
+
+## Build Process
+
+### Production Build
+
+Vite optimizes your application for production with automatic code splitting, minification, and asset optimization.
+
+```bash
+npm run build
+```
+
+This command runs `vite build` which:
+
+1. **Bundles** all source files using Rollup
+2. **Minifies** JavaScript with esbuild (extremely fast)
+3. **Optimizes** CSS and removes unused styles
+4. **Generates** hashed filenames for cache busting
+5. **Creates** source maps (when in dev mode)
+6. **Outputs** to the `dist/` directory
+
+<Note>
+  The build process uses **React SWC** (`@vitejs/plugin-react-swc:2`) for faster compilation compared to standard Babel.
+</Note>
+
+### Development Build
+
+For debugging production builds with source maps:
+
+```bash
+npm run build:dev
+```
+
+This runs `vite build --mode development` which:
+- Includes **source maps** for easier debugging
+- Preserves **readable code structure**
+- Still optimizes bundle size
+
+<Warning>
+  Do not deploy development builds to production - they expose source code and are larger in size.
+</Warning>
+
+## Build Output Structure
+
+After running `npm run build`, the `dist/` directory contains:
+
+```
+dist/
+├── assets/
+│   ├── index-[hash].js       # Main application bundle
+│   ├── index-[hash].css      # Compiled styles
+│   └── [component]-[hash].js # Code-split chunks
+├── favicon.svg
+├── placeholder.svg
+├── robots.txt
+└── index.html                # Entry HTML with asset references
+```
+
+### Understanding the Output
+
+<Steps>
+  <Step title="index.html">
+    Production HTML with:
+    - Minified markup
+    - Preload hints for critical resources
+    - Hashed asset references for cache busting
+    - Meta tags from `index.html:4-15`
+  </Step>
+
+  <Step title="assets/index-[hash].js">
+    Main JavaScript bundle containing:
+    - React runtime and React DOM
+    - Application components
+    - React Router logic
+    - TanStack Query client
+    - Tree-shaken dependencies (unused code removed)
+  </Step>
+
+  <Step title="assets/index-[hash].css">
+    Compiled CSS with:
+    - Tailwind utility classes (only used ones)
+    - Custom component styles
+    - CSS animations from `tailwind.config.ts:70-88`
+    - Vendor prefixes via autoprefixer
+  </Step>
+
+  <Step title="Code-split chunks">
+    Dynamic imports create separate bundles for:
+    - Large UI component libraries (Radix UI)
+    - Heavy dependencies (Framer Motion, Recharts)
+    - Route-based code splitting
+  </Step>
+</Steps>
+
+## Preview Production Build Locally
+
+Before deploying, test the production build:
+
+```bash
+# Build first
+npm run build
+
+# Preview the built app
+npm run preview
+```
+
+This starts a local static file server at `http://localhost:4173` serving the `dist/` directory.
+
+<Tip>
+  Always preview builds locally to catch issues like missing assets or broken routes before deploying.
+</Tip>
+
+## Deployment Options
+
+### Option 1: Vercel (Recommended)
+
+**Best for**: Zero-config deployments with automatic CI/CD.
+
+<Steps>
+  <Step title="Install Vercel CLI">
+    ```bash
+    npm install -g vercel
+    ```
+  </Step>
+
+  <Step title="Deploy to Vercel">
+    ```bash
+    vercel
+    ```
+
+    Follow the prompts to link your project.
+  </Step>
+
+  <Step title="Configure build settings (if needed)">
+    Create `vercel.json` in the project root:
+
+    ```json
+    {
+      "buildCommand": "npm run build",
+      "outputDirectory": "dist",
+      "framework": "vite"
+    }
+    ```
+  </Step>
+</Steps>
+
+**Features**:
+- Automatic HTTPS
+- Global CDN
+- Instant rollbacks
+- Preview deployments for every commit
+- Zero configuration for Vite projects
+
+### Option 2: Netlify
+
+**Best for**: Simple drag-and-drop deployments with powerful build plugins.
+
+<Steps>
+  <Step title="Build the project">
+    ```bash
+    npm run build
+    ```
+  </Step>
+
+  <Step title="Deploy via Netlify CLI">
+    ```bash
+    # Install Netlify CLI
+    npm install -g netlify-cli
+
+    # Deploy
+    netlify deploy --prod
+    ```
+
+    Select `dist` as the publish directory.
+  </Step>
+
+  <Step title="Configure redirects for SPA routing">
+    Create `public/_redirects`:
+
+    ```text
+    /*    /index.html   200
+    ```
+
+    This ensures React Router handles all routes.
+  </Step>
+</Steps>
+
+**Netlify Configuration** (`netlify.toml`):
+
+```toml
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+```
+
+### Option 3: GitHub Pages
+
+**Best for**: Free hosting for open-source projects.
+
+<Steps>
+  <Step title="Install gh-pages">
+    ```bash
+    npm install --save-dev gh-pages
+    ```
+  </Step>
+
+  <Step title="Update vite.config.ts">
+    Set the base path to your repo name:
+
+    ```typescript
+    export default defineConfig({
+      base: '/your-repo-name/',
+      // ... other config
+    })
+    ```
+  </Step>
+
+  <Step title="Add deploy script to package.json">
+    ```json
+    {
+      "scripts": {
+        "predeploy": "npm run build",
+        "deploy": "gh-pages -d dist"
+      }
+    }
+    ```
+  </Step>
+
+  <Step title="Deploy">
+    ```bash
+    npm run deploy
+    ```
+  </Step>
+</Steps>
+
+<Warning>
+  GitHub Pages does not support SPA routing out of the box. You may need to use hash-based routing or a 404.html trick.
+</Warning>
+
+### Option 4: Docker Container
+
+**Best for**: Self-hosted deployments or cloud platforms (AWS, GCP, Azure).
+
+Create `Dockerfile`:
+
+```dockerfile
+# Build stage
+FROM node:18-alpine AS build
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci
+COPY . .
+RUN npm run build
+
+# Production stage
+FROM nginx:alpine
+COPY --from=build /app/dist /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
+```
+
+Create `nginx.conf`:
+
+```nginx
+server {
+  listen 80;
+  server_name _;
+  root /usr/share/nginx/html;
+  index index.html;
+
+  location / {
+    try_files $uri $uri/ /index.html;
+  }
+}
+```
+
+Build and run:
+
+```bash
+# Build image
+docker build -t react-portfolio .
+
+# Run container
+docker run -p 80:80 react-portfolio
+```
+
+## Environment Variables
+
+Vite exposes environment variables prefixed with `VITE_` to client-side code.
+
+### Usage
+
+<Steps>
+  <Step title="Create .env file">
+    ```bash
+    # .env
+    VITE_API_URL=https://api.example.com
+    VITE_ANALYTICS_ID=UA-XXXXXXXXX-X
+    ```
+  </Step>
+
+  <Step title="Access in code">
+    ```typescript
+    const apiUrl = import.meta.env.VITE_API_URL
+    const analyticsId = import.meta.env.VITE_ANALYTICS_ID
+    ```
+  </Step>
+
+  <Step title="Add to .gitignore">
+    The `.gitignore:13` already excludes `.env.local`:
+
+    ```gitignore
+    *.local
+    ```
+
+    Use `.env.local` for secrets.
+  </Step>
+</Steps>
+
+### Environment Files
+
+| File | Purpose | Committed? |
+|------|---------|------------|
+| `.env` | Default values | ✅ Yes |
+| `.env.local` | Local overrides (secrets) | ❌ No |
+| `.env.production` | Production-only values | ✅ Yes |
+| `.env.development` | Development-only values | ✅ Yes |
+
+<Warning>
+  **Never commit secrets** like API keys to version control. Use `.env.local` for sensitive data.
+</Warning>
+
+## Production Optimization Tips
+
+### 1. Lazy Load Routes
+
+Split code by route for faster initial load:
+
+```typescript
+import { lazy, Suspense } from 'react'
+
+const Index = lazy(() => import('./pages/Index'))
+const NotFound = lazy(() => import('./pages/NotFound'))
+
+const App = () => (
+  <Suspense fallback={<div>Loading...</div>}>
+    <Routes>
+      <Route path="/" element={<Index />} />
+      <Route path="*" element={<NotFound />} />
+    </Routes>
+  </Suspense>
+)
+```
+
+### 2. Optimize Images
+
+The `public/` folder contains:
+- `favicon.svg` - Optimized vector icon
+- `placeholder.svg` - Lightweight placeholder
+
+For photos/screenshots, use:
+- **WebP format** for better compression
+- Responsive images with `<picture>` element
+- Image CDNs (Cloudinary, imgix) for automatic optimization
+
+### 3. Enable Compression
+
+Most hosting providers enable gzip/brotli automatically. For self-hosted:
+
+**Nginx example**:
+```nginx
+gzip on;
+gzip_types text/css application/javascript image/svg+xml;
+gzip_min_length 1000;
+```
+
+### 4. Set Cache Headers
+
+**For hashed assets** (`assets/*-[hash].js`):
+```
+Cache-Control: public, max-age=31536000, immutable
+```
+
+**For index.html**:
+```
+Cache-Control: no-cache
+```
+
+### 5. Analyze Bundle Size
+
+Visualize what's in your bundle:
+
+```bash
+# Install plugin
+npm install -D rollup-plugin-visualizer
+
+# Update vite.config.ts
+import { visualizer } from 'rollup-plugin-visualizer'
+
+export default defineConfig({
+  plugins: [
+    react(),
+    visualizer({ open: true })
+  ]
+})
+
+# Build and open stats
+npm run build
+```
+
+### 6. Remove Unused Dependencies
+
+The project includes **65 dependencies** from `package.json:15-65`. Audit regularly:
+
+```bash
+# Check for unused dependencies
+npx depcheck
+
+# Remove unused package
+npm uninstall <package-name>
+```
+
+<Tip>
+  Many **@radix-ui** packages are tree-shaken automatically - only imported components are bundled.
+</Tip>
+
+## Performance Checklist
+
+Before deploying:
+
+- [ ] Run `npm run build` without errors
+- [ ] Test `npm run preview` locally
+- [ ] Check bundle size (keep main bundle < 300KB gzipped)
+- [ ] Verify all images are optimized
+- [ ] Test on mobile devices and slow connections
+- [ ] Run Lighthouse audit (aim for 90+ scores)
+- [ ] Configure proper cache headers
+- [ ] Set up error tracking (Sentry, LogRocket)
+- [ ] Enable analytics (Google Analytics, Plausible)
+
+## Troubleshooting
+
+<Card title="Routes 404 after deployment" icon="triangle-exclamation">
+  **Solution**: Configure your hosting provider to redirect all routes to `index.html` for SPA routing.
+
+  - **Vercel/Netlify**: Automatic
+  - **Nginx**: Add `try_files $uri /index.html`
+  - **Apache**: Use `.htaccess` with `RewriteRule`
+</Card>
+
+<Card title="Assets not loading (404)" icon="triangle-exclamation">
+  **Solution**: Check the `base` option in `vite.config.ts`. For subdirectory deployments:
+
+  ```typescript
+  export default defineConfig({
+    base: '/subdirectory/',
+  })
+  ```
+</Card>
+
+<Card title="Large bundle size" icon="triangle-exclamation">
+  **Solution**: 
+  - Use dynamic imports for heavy dependencies
+  - Remove unused UI components from `src/components/ui/`
+  - Check for duplicate dependencies with `npm dedupe`
+  - Enable tree-shaking for libraries
+</Card>
+
+<Card title="Environment variables not working" icon="triangle-exclamation">
+  **Solution**:
+  - Prefix all variables with `VITE_`
+  - Restart dev server after changing `.env`
+  - Use `import.meta.env.VITE_*`, not `process.env.*`
+</Card>
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Local Setup" icon="laptop-code" href="./local-setup">
+    Return to development environment setup
+  </Card>
+  <Card title="Project Structure" icon="folder" href="./project-structure">
+    Review the codebase organization
+  </Card>
+</CardGroup>
+
+## Additional Resources
+
+- [Vite Production Build Guide](https://vitejs.dev/guide/build.html)
+- [Vercel Vite Deployment](https://vercel.com/docs/frameworks/vite)
+- [Netlify SPA Routing](https://docs.netlify.com/routing/redirects/rewrites-proxies/#history-pushstate-and-single-page-apps)
+- [React Router Deployment](https://reactrouter.com/en/main/start/tutorial#deploying)
